@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('https://www.sstkayr.com').hostname,
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.7.1',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":false,"style":"mac"},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="自从买了一个树莓派，就一直吃灰，遂赶紧编译一个OpenWrt">
+<meta name="keywords" content="Linux">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OpenWrt 编译教程">
+<meta property="og:url" content="https://www.sstkayr.com/2019/10/20/OpenWrt-编译教程/index.html">
+<meta property="og:site_name" content="太极">
+<meta property="og:description" content="自从买了一个树莓派，就一直吃灰，遂赶紧编译一个OpenWrt">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://www.sstkayr.com/2019/10/20/OpenWrt-编译教程/主页面.png">
+<meta property="og:image" content="https://www.sstkayr.com/2019/10/20/OpenWrt-编译教程/speedtest.png">
+<meta property="og:updated_time" content="2020-02-18T07:43:03.350Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="OpenWrt 编译教程">
+<meta name="twitter:description" content="自从买了一个树莓派，就一直吃灰，遂赶紧编译一个OpenWrt">
+<meta name="twitter:image" content="https://www.sstkayr.com/2019/10/20/OpenWrt-编译教程/主页面.png">
+
+<link rel="canonical" href="https://www.sstkayr.com/2019/10/20/OpenWrt-编译教程/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>OpenWrt 编译教程 | 太极</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">太极</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">宇宙之浩瀚 万物之无穷</p>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签<span class="badge">11</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类<span class="badge">5</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">36</span></a>
+
+  </li>
+        <li class="menu-item menu-item-schedule">
+
+    <a href="/schedule/" rel="section"><i class="fa fa-fw fa-calendar"></i>日程表</a>
+
+  </li>
+        <li class="menu-item menu-item-links">
+
+    <a href="/links/" rel="section"><i class="fa fa-fw fa-link"></i>链接</a>
+
+  </li>
+        <li class="menu-item menu-item-message-board">
+
+    <a href="/message-board/" rel="section"><i class="fa fa-fw fa-bookmark-o"></i>留言板</a>
+
+  </li>
+        <li class="menu-item menu-item-taichi-music-player">
+
+    <a href="https://music.sstkayr.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-music"></i>太极音乐播放器</a>
+
+  </li>
+        <li class="menu-item menu-item-taichi-zone">
+
+    <a href="https://tizone.sstkayr.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-compass"></i>太极空间</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+	
+	<script>
+		document.addEventListener("visibilitychange", function () {
+        if (document.hidden) {
+            document.title="乾坤";
+			} 
+		else{
+			document.title="☯";
+			setTimeout(function(){
+				document.title="太极";
+				}, 1200);
+			}
+		}, false);
+	</script>
+	
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.sstkayr.com/2019/10/20/OpenWrt-编译教程/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Infinity">
+      <meta itemprop="description" content="Stars are only visible in darkness.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="太极">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          OpenWrt 编译教程
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-10-20 14:50:04" itemprop="dateCreated datePublished" datetime="2019-10-20T14:50:04+08:00">2019-10-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-02-18 15:43:03" itemprop="dateModified" datetime="2020-02-18T15:43:03+08:00">2020-02-18</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Information-Technology/" itemprop="url" rel="index">
+                    <span itemprop="name">Information Technology</span>
+                  </a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Information-Technology/Practical-Tutorial/" itemprop="url" rel="index">
+                    <span itemprop="name">Practical Tutorial</span>
+                  </a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>30k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>27 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>自从买了一个树莓派，就一直吃灰，遂赶紧编译一个OpenWrt</p>
+<a id="more"></a>
+<hr>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">以下不是教程，想看教程请看第二部分！</span><br><span class="line">以下不是教程，想看教程请看第二部分！</span><br><span class="line">以下不是教程，想看教程请看第二部分！</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="第一部分：翻车"><a href="#第一部分：翻车" class="headerlink" title="第一部分：翻车"></a>第一部分：翻车</h1><h2 id="第一步，布置环境"><a href="#第一步，布置环境" class="headerlink" title="第一步，布置环境"></a>第一步，布置环境</h2><h3 id="第一步：安装-VMware-Workstation-Pro"><a href="#第一步：安装-VMware-Workstation-Pro" class="headerlink" title="第一步：安装 VMware Workstation Pro"></a>第一步：安装 <code>VMware Workstation Pro</code></h3><p>备注一下：请安装最新版的 <code>VMware Workstation Pro</code> ，否则 <code>VMware Workstation Pro</code> 可能会与 <code>宿主机</code> 产生兼容性问题</p>
+<h3 id="第二步：下载ubuntu-18-04-3-desktop-amd64-iso"><a href="#第二步：下载ubuntu-18-04-3-desktop-amd64-iso" class="headerlink" title="第二步：下载ubuntu-18.04.3-desktop-amd64.iso"></a>第二步：下载<code>ubuntu-18.04.3-desktop-amd64.iso</code></h3><p><a href="http://releases.ubuntu.com/18.04.3/ubuntu-18.04.3-desktop-amd64.iso" target="_blank" rel="noopener">点击下载 ubuntu-18.04.3-desktop-amd64.iso</a></p>
+<h3 id="第三步：将下载的-ubuntu-18-04-3-desktop-amd64-iso-安装到-VMware-Workstation-中"><a href="#第三步：将下载的-ubuntu-18-04-3-desktop-amd64-iso-安装到-VMware-Workstation-中" class="headerlink" title="第三步：将下载的 ubuntu-18.04.3-desktop-amd64.iso 安装到 VMware Workstation 中"></a>第三步：将下载的 <code>ubuntu-18.04.3-desktop-amd64.iso</code> 安装到 <code>VMware Workstation</code> 中</h3><p>我个人的安装方法是 <code>VMware Workstation Pro</code> 自带的快速安装，硬盘大小差不多 <code>80-100G</code> ，不够用了再用 <code>gparted</code> 扩就行了</p>
+<p>一个 <code>sudo apt-get install gparted</code> 的事，分完区重启就行了</p>
+<h3 id="第四步，如果你不是快速安装，那么请你自行安装-VMware-Tools"><a href="#第四步，如果你不是快速安装，那么请你自行安装-VMware-Tools" class="headerlink" title="第四步，如果你不是快速安装，那么请你自行安装 VMware Tools"></a>第四步，如果你不是快速安装，那么请你自行安装 <code>VMware Tools</code></h3><p>这样，基本环境就布置好了</p>
+<h2 id="第二步，开始编译"><a href="#第二步，开始编译" class="headerlink" title="第二步，开始编译"></a>第二步，开始编译</h2><p>以下内容基于 <a href="https://github.com/coolsnowwolf/lede" target="_blank" rel="noopener">Welcome to Lean’s  git source of OpenWrt and packages</a> 修改</p>
+<p>感谢 <code>Lean</code> 提供支持</p>
+<hr>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">注意：</span><br><span class="line"></span><br><span class="line"><span class="number">1.</span> 不要用 root 用户 git 和编译！！！</span><br><span class="line"></span><br><span class="line"><span class="number">2.</span> 国内用户编译前最好准备好梯子</span><br><span class="line"></span><br><span class="line"><span class="number">3.</span> 默认登陆IP <span class="number">192.168</span><span class="number">.1</span><span class="number">.1</span>, 密码 password</span><br></pre></td></tr></table></figure>
+<h3 id="第一步：命令行输入-sudo-apt-get-update-，然后输入"><a href="#第一步：命令行输入-sudo-apt-get-update-，然后输入" class="headerlink" title="第一步：命令行输入 sudo apt-get update ，然后输入"></a>第一步：命令行输入 <code>sudo apt-get update</code> ，然后输入</h3><figure class="highlight q"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-<span class="built_in">get</span> -y install build-essential asciidoc binutils bzip2 gawk gettext git libncurses5-<span class="built_in">dev</span> libz-<span class="built_in">dev</span> patch unzip zlib1g-<span class="built_in">dev</span> lib32gcc1 libc6-<span class="built_in">dev</span>-i386 subversion flex uglifyjs git-core gcc-multilib p7zip p7zip-full msmtp libssl-<span class="built_in">dev</span> texinfo libglib2<span class="number">.0</span>-<span class="built_in">dev</span> xmlto qemu-utils upx libelf-<span class="built_in">dev</span> autoconf automake libtool autopoint</span><br></pre></td></tr></table></figure>
+<h3 id="第二步，执行git-clone"><a href="#第二步，执行git-clone" class="headerlink" title="第二步，执行git clone"></a>第二步，执行<code>git clone</code></h3><p>我直接在 <code>home</code> 目录下执行 <code>git clone</code> 的，如果你在其他地方执行，<font size="5" color="red">切记，路径不能有中文</font></p>
+<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd ~</span><br><span class="line">git <span class="keyword">clone</span> <span class="title">https</span>://github.com/coolsnowwolf/lede</span><br></pre></td></tr></table></figure>
+<h3 id="第三步，进入-lede-子目录"><a href="#第三步，进入-lede-子目录" class="headerlink" title="第三步，进入 lede 子目录"></a>第三步，进入 <code>lede</code> 子目录</h3><figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">cd</span> <span class="string">./lede</span></span><br></pre></td></tr></table></figure>
+<h4 id="附加步骤："><a href="#附加步骤：" class="headerlink" title="附加步骤："></a>附加步骤：</h4><h5 id="编译前下载好-DL包-，可大量缩减首次编译时间；使用-涡轮增雕法-，可把大雕删除的软件打包回去编译"><a href="#编译前下载好-DL包-，可大量缩减首次编译时间；使用-涡轮增雕法-，可把大雕删除的软件打包回去编译" class="headerlink" title="编译前下载好 DL包 ，可大量缩减首次编译时间；使用 涡轮增雕法 ，可把大雕删除的软件打包回去编译"></a>编译前下载好 <code>DL包</code> ，可大量缩减首次编译时间；使用 <code>涡轮增雕法</code> ，可把大雕删除的软件打包回去编译</h5><h6 id="DL包使用方法：dl-tgz-放进-home-mj-目录，解压，执行以下命令"><a href="#DL包使用方法：dl-tgz-放进-home-mj-目录，解压，执行以下命令" class="headerlink" title="DL包使用方法：dl.tgz 放进 /home/mj/ 目录，解压，执行以下命令"></a><code>DL包</code>使用方法：<code>dl.tgz</code> 放进 <code>/home/mj/</code> 目录，解压，执行以下命令</h6><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ln -s <span class="regexp">/home/m</span>j<span class="regexp">/dl /</span>home<span class="regexp">/mj/</span>lede</span><br></pre></td></tr></table></figure>
+<h6 id="涡轮增雕法使用方法：diy-tgz-放进-home-mj-目录，解压，执行以下命令"><a href="#涡轮增雕法使用方法：diy-tgz-放进-home-mj-目录，解压，执行以下命令" class="headerlink" title="涡轮增雕法使用方法：diy.tgz 放进 /home/mj/ 目录，解压，执行以下命令"></a><code>涡轮增雕法</code>使用方法：<code>diy.tgz</code> 放进 <code>/home/mj/</code> 目录，解压，执行以下命令</h6><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ln -s <span class="regexp">/home/m</span>j<span class="regexp">/diy /</span>home<span class="regexp">/mj/</span>lede<span class="regexp">/package/</span>openwrt-packages</span><br></pre></td></tr></table></figure>
+<p>这样编译时就会加载 <code>/package/lean</code> 和 <code>/package/openwrt-packages（量子领域）</code> ，如果这2个文件夹里的插件包同名则优先编译 <code>/package/lean</code> 里的插件</p>
+<p>使用涡轮增雕法，可通过在量子领域里把插件打包回去编译，例如 <code>KPR</code> ， <code>Verysync</code> ， <code>Serverchan</code> ， <code>BaiduPCS-Web</code></p>
+<h6 id="下载链接"><a href="#下载链接" class="headerlink" title="下载链接"></a>下载链接</h6><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">链接: https:<span class="regexp">//</span>pan.baidu.com<span class="regexp">/s/</span><span class="number">1</span>dy4L8b775NRCApd8mXZ9Cg 密码: mjdl</span><br></pre></td></tr></table></figure>
+<h3 id="第四步，更新-FEEDS"><a href="#第四步，更新-FEEDS" class="headerlink" title="第四步，更新 FEEDS"></a>第四步，更新 <code>FEEDS</code></h3><figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">cd</span> <span class="string">./lede</span></span><br><span class="line"><span class="string">./scripts/feeds</span> update -a</span><br><span class="line"><span class="string">./scripts/feeds</span> install -a</span><br></pre></td></tr></table></figure>
+<h3 id="第五步，执行-make-menuconfig，选择编译的参数"><a href="#第五步，执行-make-menuconfig，选择编译的参数" class="headerlink" title="第五步，执行 make menuconfig，选择编译的参数"></a>第五步，执行 <code>make menuconfig</code>，选择编译的参数</h3><p>注意，在执行这个命令之前一定要把终端窗口调大</p>
+<p>否则会因为窗口小无法启动“OpenWrt Configuration”而报错！！</p>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">make menuconfig</span></span><br></pre></td></tr></table></figure>
+<h4 id="基本三步走"><a href="#基本三步走" class="headerlink" title="基本三步走"></a>基本三步走</h4><h5 id="第一步，首先先去-Target-System-选择你的-CPU架构"><a href="#第一步，首先先去-Target-System-选择你的-CPU架构" class="headerlink" title="第一步，首先先去 Target System 选择你的 CPU架构"></a>第一步，首先先去 <code>Target System</code> 选择你的 <code>CPU架构</code></h5><h6 id="我选择的是-BCM2711-boards-64-bit"><a href="#我选择的是-BCM2711-boards-64-bit" class="headerlink" title="我选择的是 BCM2711 boards (64 bit)"></a>我选择的是 <code>BCM2711 boards (64 bit)</code></h6><h5 id="第二步，其次去-Subtarget-选择你的-CPU型号"><a href="#第二步，其次去-Subtarget-选择你的-CPU型号" class="headerlink" title="第二步，其次去 Subtarget 选择你的 CPU型号"></a>第二步，其次去 <code>Subtarget</code> 选择你的 <code>CPU型号</code></h5><h6 id="我选择的是-Subtarget-BCM2711-boards-64-bit"><a href="#我选择的是-Subtarget-BCM2711-boards-64-bit" class="headerlink" title="我选择的是 Subtarget (BCM2711 boards (64 bit))"></a>我选择的是 <code>Subtarget (BCM2711 boards (64 bit))</code></h6><h5 id="第三步，最后去-Target-Profile选择你的-机器型号"><a href="#第三步，最后去-Target-Profile选择你的-机器型号" class="headerlink" title="第三步，最后去 Target Profile选择你的 机器型号"></a>第三步，最后去 <code>Target Profile</code>选择你的 <code>机器型号</code></h5><h6 id="我选择的是-Target-Profile-Raspberry-Pi-4B"><a href="#我选择的是-Target-Profile-Raspberry-Pi-4B" class="headerlink" title="我选择的是 Target Profile (Raspberry Pi 4B)"></a>我选择的是 <code>Target Profile (Raspberry Pi 4B)</code></h6><p>这里注意一下，如果没有刷新出来你的型号，可能是你的网络不好</p>
+<p>这时你可以去看看<code>Openwrt</code>官方有没有，多试几次</p>
+<h4 id="接下来是详细的设置"><a href="#接下来是详细的设置" class="headerlink" title="接下来是详细的设置"></a>接下来是详细的设置</h4><h5 id="第一步，调整Target-Images-gt-Kernel-partition-size-in-MB-的大小，我一口气给他设置了-128-MB"><a href="#第一步，调整Target-Images-gt-Kernel-partition-size-in-MB-的大小，我一口气给他设置了-128-MB" class="headerlink" title="第一步，调整Target Images &gt; Kernel partition size (in MB)的大小，我一口气给他设置了 128 MB"></a>第一步，调整<code>Target Images &gt; Kernel partition size (in MB)</code>的大小，我一口气给他设置了 <code>128</code> MB</h5><h5 id="第二步，调整Target-Images-gt-Root-filesystem-partition-size-in-MB-的大小，我又一口气给他设置了-512-MB"><a href="#第二步，调整Target-Images-gt-Root-filesystem-partition-size-in-MB-的大小，我又一口气给他设置了-512-MB" class="headerlink" title="第二步，调整Target Images &gt; Root filesystem partition size (in MB)的大小，我又一口气给他设置了 512 MB"></a>第二步，调整<code>Target Images &gt; Root filesystem partition size (in MB)</code>的大小，我又一口气给他设置了 <code>512</code> MB</h5><p>反正32G内存卡，不嫌地大~ 你别设置太小了，不然后边编译会出错</p>
+<p>接下来的选项，按 <code>y</code> 表示编译进 <code>Openwrt</code> ，按 <code>n</code> 取消编译进 <code>Openwrt</code> ，按 <code>m</code> 表示编译成 <code>模块</code> 或者 <code>IPK包</code></p>
+<h5 id="第三步，进入-gt-LuCI-gt-1-Collections-，选择一个你想要的界面"><a href="#第三步，进入-gt-LuCI-gt-1-Collections-，选择一个你想要的界面" class="headerlink" title="第三步，进入 &gt; LuCI &gt; 1. Collections ，选择一个你想要的界面"></a>第三步，进入 <code>&gt; LuCI &gt; 1. Collections</code> ，选择一个你想要的界面</h5><h5 id="第四步，进入-gt-LuCI-gt-2-Modules-gt-Translations-，选择你的语言"><a href="#第四步，进入-gt-LuCI-gt-2-Modules-gt-Translations-，选择你的语言" class="headerlink" title="第四步，进入 &gt; LuCI &gt; 2. Modules &gt; Translations ，选择你的语言"></a>第四步，进入 <code>&gt; LuCI &gt; 2. Modules &gt; Translations</code> ，选择你的语言</h5><h5 id="第五步，进入-gt-LuCI-gt-4-Themes-，选择你想编译进去的主题"><a href="#第五步，进入-gt-LuCI-gt-4-Themes-，选择你想编译进去的主题" class="headerlink" title="第五步，进入 &gt; LuCI &gt; 4. Themes ，选择你想编译进去的主题"></a>第五步，进入 <code>&gt; LuCI &gt; 4. Themes</code> ，选择你想编译进去的主题</h5><h5 id="第六步，进入-gt-LuCI-gt-3-Applications-，选择你需要编译进去的应用"><a href="#第六步，进入-gt-LuCI-gt-3-Applications-，选择你需要编译进去的应用" class="headerlink" title="第六步，进入 &gt; LuCI &gt; 3. Applications ，选择你需要编译进去的应用"></a>第六步，进入 <code>&gt; LuCI &gt; 3. Applications</code> ，选择你需要编译进去的应用</h5><h5 id="第七步，进入-gt-Kernel-modules-去选择你想支持的-Filesystems-USB-Support-等等驱动，比如说："><a href="#第七步，进入-gt-Kernel-modules-去选择你想支持的-Filesystems-USB-Support-等等驱动，比如说：" class="headerlink" title="第七步，进入 &gt; Kernel modules 去选择你想支持的 Filesystems ,  USB Support 等等驱动，比如说："></a>第七步，进入 <code>&gt; Kernel modules</code> 去选择你想支持的 <code>Filesystems</code> ,  <code>USB Support</code> 等等驱动，比如说：</h5><p>我还打算插一个 <code>AX88179</code> 的 <code>USB网卡</code> ，</p>
+<p>所以需要选择 <code>&gt; Kernel modules &gt; USB Support</code> 下的 <code>kmod-usb-net-asix-ax88179</code></p>
+<p>关于 <code>Applications</code> 说明，请看下面的介绍</p>
+<p>以下说明来自 <a href="https://wp.gxnas.com/2366.html" target="_blank" rel="noopener">OpenWrt 编译 LuCI -&gt; Applications 添加插件应用说明</a></p>
+<figure class="highlight xl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br></pre></td><td class="code"><pre><span class="line">选择LuCI 配置：  常用</span><br><span class="line">-----------------------------------------------------------------------------------------</span><br><span class="line">L大雕 选择LuCI 配置：</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-adbyby-plus   #去广告</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-arpbind  #IP/MAC绑定</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-autoreboot  #高级重启</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-aliddns   #阿里DDNS客户端</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-ddns   #动态域名 DNS </span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-filetransfer  #文件传输</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-firewall   #添加防火墙</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-frpc   #内网穿透 Frp</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-guest-wifi  #WiFi访客网络</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-hd-idle  #硬盘休眠</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-ipsec-virtual**d  #virtual**服务器 IPSec</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-mwan3   #MWAN负载均衡</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-nft-qos  #QOS流控 Nftables版</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-nlbwmon   #网络带宽监视器</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-p p t p-server  #virtual**服务器 p p t p </span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-ramfree  #释放内存</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-samba   #网络共享(Samba)</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-sfe  #Turbo ACC网络加速(开启Fast Path转发加速)</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-sqm  #流量智能队列管理(QOS)</span><br><span class="line">-------------------------------------------------------------------------------------------</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-S-S R-plus   #S-S R兲朝上网Plus+</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> <span class="function"><span class="title">luci</span>-app-S-S R-plus ---&gt;</span> Include s-s New Versiong  #新SS代理</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> <span class="function"><span class="title">luci</span>-app-S-S R-plus ---&gt;</span> Include V2ray  #V2Ray透明代理</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> <span class="function"><span class="title">luci</span>-app-S-S R-plus ---&gt;</span> Include Kcptun  #Kcptun代理</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> <span class="function"><span class="title">luci</span>-app-S-S R-plus ---&gt;</span> Include s-sR Server  #S-S R客户端</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> <span class="function"><span class="title">luci</span>-app-S-S R-plus ---&gt;</span> Include s-sR Socks <span class="built_in">and</span> Tunnel  #S-S R代理</span><br><span class="line">-------------------------------------------------------------------------------------------</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-syncdial  #多拨虚拟网卡(原macvlan)</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-upnp   #通用即插即用UPnP(端口自动转发)</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-v2ray-pro  #V2Ray透明代理</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-vlmcsd  #KMS服务器设置</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-vsftpd  #FTP服务器</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-webadmin  #Web管理页面设置</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-wifischedule  #WiFi 计划</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-wireless-regdb  #WiFi无线</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-wol   #WOL网络唤醒</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-wrtbwmon  #实时流量监测</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-xlnetacc  #迅雷快鸟</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-zerotier  #ZeroTier内网穿透</span><br><span class="line">U<span class="function"><span class="title">tilities</span>  ---&gt;</span>  open-vm-tools  #打开适用于VMware的VM Tools</span><br><span class="line">-----------------------------------------------------------------------------------------</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-adblock   #ADB广告过滤</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-advanced-reboot  #Linksys高级重启</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-ahcp  #支持AHCPd</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-amule  #aMule下载工具</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-aria2 # Aria2下载工具</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-asterisk  #支持Asterisk电话服务器</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-attendedsysupgrade  #固件更新升级相关</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-bcp38  #BCP38网络入口过滤(不确定)</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-bird4   #Bird <span class="number">4</span>(未知)</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-bird6   #Bird <span class="number">6</span>(未知)</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-bmx6  #BMX6路由协议</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-bmx7  #BMX7路由协议</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-caldav  #联系人</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-cjdns  #加密IPV6网络相关</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-clamav  #ClamAV杀毒软件</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-commands   #Shell命令模块</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-cshark   #CloudShark捕获工具</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-diag-core   #core诊断工具</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-dnscrypt-proxy  #DNSCrypt解决DNS污染</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-dnscrypt-dnsforwarder  #DNSForwarder防DNS污染</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-dump1090  #民航无线频率(不确定)</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-dynapoint  #DynaPoint(未知)</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-e2guardian   #Web内容过滤器</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-freifunk-diagnostics   #诊断(未知)</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-freifunk-policyrouting  #策略路由(未知)</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-freifunk-widgets  #索引(未知)</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-fwknopd  #Firewall Knock Operator服务器</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-gfwlist   #GFW域名列表？</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-hnet  #Homenet Status家庭网络控制协议</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-kooldns  #virtual**服务器 ddns替代方案</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-koolproxy  #KP去广告</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-lxc   #LXC容器管理</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-meshwizard #网络设置向导</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-minidlna   #完全兼容DLNA / UPnP-AV客户端的服务器软件</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-mjpg-streamer   #兼容Linux-UVC的摄像头程序</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-mmc-over-gpio   #添加SD卡操作界面?</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-multiwan   #多拨虚拟网卡?</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-n2n_v2   #N2N内网穿透 N2N v2 virtual**服务</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-noddos  #NodDOS Clients 阻止DDoS攻击</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-ntpc   #NTP时间同步服务器</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-ocserv  #OpenConnect virtual**</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-olsr  #OLSR配置和状态模块</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-olsr-services  #OLSR服务器</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-olsr-viz   #OLSR可视化</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-ocserv   #OpenConnect virtual**服务?</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-openvirtual**  #Openvirtual**客户端</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-openvirtual**-server  #易于使用的Openvirtual**服务器 Web-UI</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-oscam   #OSCAM服务器?</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-p910nd   #打印服务器模块</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-pagekitee   #Pagekite内网穿透客户端</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-polipo  #Polipo代理(是一个小型且快速的网页缓存代理)</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-pppoe-relay  #PPPoE NAT穿透 点对点协议(PPP)</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-privoxy  #Privoxy网络代理(带过滤无缓存)</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-qos   #流量服务质量(QoS)流控</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-radicale   #CalDAV/CardDAV同步工具</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-rp-pppoe-server  #Roaring Penguin PPPoE Server 服务器</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-s-s-libes  #SS-libev服务端</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-shairplay  #支持AirPlay功能</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-siitwizard  #SIIT配置向导  SIIT-Wizzard</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-simple-adblock  #简单的广告拦截</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-simple-softethervirtual**  #SoftEther virtual**服务器  NAT穿透</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-splash  #Client-Splash是无线MESH网络的一个热点认证系统</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-squid   #Squid代理服务器</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-S-S R-pro  #S-S R-Pro</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-s-s   #SS兲朝上网?</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-S-S Rserver-python  #s-sR Python服务器</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-statistics  #流量监控工具</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-tinyproxy  #Tinyproxy是 HTTP(S)代理服务器</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-transmission   #BT下载工具</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-travelmate  #旅行路由器</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-ttyd   #网页终端命令行</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-udpxy  #udpxy做组播服务器</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-uhttpd  #uHTTPd Web服务器</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-unbound  #Unbound DNS解析器</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-usb-printer   #USB 打印服务器</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-vnstat   #vnStat网络监控(图表)</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-virtual**bypass  #virtual** BypassWebUI  绕过virtual**设置</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-watchcat  #断网检测功能与定时重启</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-webshell  #网页命令行终端?</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-wireguard  #virtual**服务器 WireGuard状态</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> C<span class="function"><span class="title">ollections</span> ---&gt;</span> luci   #添加luci (web界面管理)</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> M<span class="function"><span class="title">odules</span> ---&gt;</span> T<span class="function"><span class="title">ranslations</span> ---&gt;</span> Simplified Chinese (zh-cn) #新版本中文语言包位置</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> T<span class="function"><span class="title">hemes</span> ---&gt;</span> luci-<span class="built_in">theme</span>-bootstrap   #默认主题，大家可以自行增减插件</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> T<span class="function"><span class="title">ranslations</span> ---&gt;</span> luci-i18n-chinese   #添加luci的中文语言包</span><br><span class="line">---------------------------------------------------------------------------------------------------</span><br></pre></td></tr></table></figure>
+<h5 id="第七步，都选择好之后，保存退出，他的配置文件名字是-config-，别改名字"><a href="#第七步，都选择好之后，保存退出，他的配置文件名字是-config-，别改名字" class="headerlink" title="第七步，都选择好之后，保存退出，他的配置文件名字是 .config ，别改名字"></a>第七步，都选择好之后，保存退出，他的配置文件名字是 <code>.config</code> ，别改名字</h5><h3 id="开始编译"><a href="#开始编译" class="headerlink" title="开始编译"></a>开始编译</h3><h4 id="选择好你的路由之后，输入下面的命令（-j1-后面是线程数。第一次编译推荐用单线程，国内请尽量全局科学上网）即可开始编译你要的固件了。"><a href="#选择好你的路由之后，输入下面的命令（-j1-后面是线程数。第一次编译推荐用单线程，国内请尽量全局科学上网）即可开始编译你要的固件了。" class="headerlink" title="选择好你的路由之后，输入下面的命令（-j1 后面是线程数。第一次编译推荐用单线程，国内请尽量全局科学上网）即可开始编译你要的固件了。"></a>选择好你的路由之后，输入下面的命令（-j1 后面是线程数。第一次编译推荐用单线程，国内请尽量全局科学上网）即可开始编译你要的固件了。</h4><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make -j1 <span class="attribute">V</span>=s</span><br></pre></td></tr></table></figure>
+<h4 id="等待数小时就编译成功了。"><a href="#等待数小时就编译成功了。" class="headerlink" title="等待数小时就编译成功了。"></a>等待数小时就编译成功了。</h4><p>编译完成后固件输出在 <code>/lede/bin/targets/</code></p>
+<h3 id="以后二次编译："><a href="#以后二次编译：" class="headerlink" title="以后二次编译："></a>以后二次编译：</h3><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">cd lede                                                          进入LEDE目录</span><br><span class="line">git pull                                                         同步更新大雕源码</span><br><span class="line">./scripts/feeds update -<span class="selector-tag">a</span> &amp;&amp; ./scripts/feeds install -<span class="selector-tag">a</span>          更新FEEDS</span><br><span class="line">rm -rf ./tmp &amp;&amp; rm -rf <span class="selector-class">.config</span>                                   清除编译配置和缓存</span><br><span class="line">make menuconfig                                                  进入编译配置菜单</span><br><span class="line">make -jn V=s                                                     n=线程数+<span class="number">1</span>，例如<span class="number">4</span>线程的I5填-j5，开始编译</span><br></pre></td></tr></table></figure>
+<h2 id="第三步，失败了"><a href="#第三步，失败了" class="headerlink" title="第三步，失败了~"></a>第三步，失败了~</h2><p><del><code>OpenWrt官网</code> 上的可以编译成功，<code>Lean</code> 的就不行，开机进不去。有谁知道的告诉我一下😂</del></p>
+<p>算了？怎么能算了！？</p>
+<p>经过不断的潜心研究，已经编译成功了，请看下文。</p>
+<h2 id="第四步，移植"><a href="#第四步，移植" class="headerlink" title="第四步，移植"></a>第四步，移植</h2><figure class="highlight erlang-repl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!</span><br><span class="line">移植部分请不要尝试，存在问题   因为这是我的尝试过程，所以写出来了</span><br><span class="line">移植部分请不要尝试，存在问题   因为这是我的尝试过程，所以写出来了</span><br><span class="line">移植部分请不要尝试，存在问题   因为这是我的尝试过程，所以写出来了</span><br><span class="line">!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!</span><br></pre></td></tr></table></figure>
+<p><del>既然 OpenWrt官网 上的可以编译成功而 Lean 的不行，那把Lean的移植到 OpenWrt官网 上的不就行了</del></p>
+<p><del>###第一步，先把源码clone下来</del></p>
+<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git <span class="keyword">clone</span> <span class="title">https</span>://github.com/openwrt/openwrt</span><br><span class="line">git <span class="keyword">clone</span> <span class="title">https</span>://github.com/coolsnowwolf/lede</span><br></pre></td></tr></table></figure>
+<p><del>###第二步，拷贝文件</del></p>
+<p><del>####第一步，附加步骤：</del></p>
+<p><del>#####编译前下载好 <code>DL包</code> ，可大量缩减首次编译时间；使用 <code>涡轮增雕法</code> ，可把大雕删除的软件打包回去编译</del></p>
+<p><del>######<code>DL包</code>使用方法：<code>dl.tgz</code> 放进 <code>/home/mj/</code> 目录，解压，执行以下命令</del></p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ln -s <span class="regexp">/home/m</span>j<span class="regexp">/dl /</span>home<span class="regexp">/mj/</span>openwrt</span><br></pre></td></tr></table></figure>
+<p><del>######<code>涡轮增雕法</code>使用方法：<code>diy.tgz</code> 放进 <code>/home/mj/</code> 目录，解压，执行以下命令</del></p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ln -s <span class="regexp">/home/m</span>j<span class="regexp">/diy /</span>home<span class="regexp">/mj/</span>openwrt<span class="regexp">/package/</span>openwrt-packages</span><br></pre></td></tr></table></figure>
+<p><del>这样编译时就会加载 <code>/package/lean</code> 和 <code>/package/openwrt-packages（量子领域）</code> ，如果这2个文件夹里的插件包同名则优先编译 <code>/package/lean</code> 里的插件</del></p>
+<p><del>使用涡轮增雕法，可通过在量子领域里把插件打包回去编译，例如 <code>KPR</code> ， <code>Verysync</code> ， <code>Serverchan</code> ， <code>BaiduPCS-Web</code></del></p>
+<p><del>######下载链接</del></p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">链接: https:<span class="regexp">//</span>pan.baidu.com<span class="regexp">/s/</span><span class="number">1</span>dy4L8b775NRCApd8mXZ9Cg 密码: mjdl</span><br></pre></td></tr></table></figure>
+<p><del>####第二步，拷贝 <code>lede/packgage/</code> 下的 <code>lean</code> 文件夹到 <code>openwrt/package/</code> 里面</del></p>
+<p><del>###第三步，修改<code>luci</code>（可选）</del></p>
+<p><del>如果你不喜欢新版的 <code>luci</code> 可以修改 <code>openwrt</code> 的 <code>feeds</code> ， 在 <code>openwrt/feeds.conf.default</code> 把这个文件换成 <code>lede</code> 下面的同名文件即可，需要最新版的 <code>luci</code> 此步略过。我没做修改，以下我们都是在新版 <code>luci</code> 下面操作。</del></p>
+<p><del>###第四步，自定义要安装的包</del></p>
+<p><del>修改 <code>openwrt/include/target.mk</code> 文件</del></p>
+<p><del>在 <code>DEFAULT_PACKAGES:=base-files libc libgcc busybox dropbear mtd uci opkg netifd fstools uclient-fetch logd</code> 后面加上自己想要编译的内容</del></p>
+<p><del>也就是说在你这句话原有的基础上修改，<code>default-settings</code> 之前的内容和我的一样不一样没有关系，我们修改的是他后面的内容</del></p>
+<p><del>我修改好的文件是这样的，每句话最后的 \是换行用的</del></p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># Default packages - the really basic <span class="keyword">set</span></span><br><span class="line">DEFAULT_PACKAGES:=base-files libc libgcc busybox dropbear mtd uci opkg netifd fstools uclient-fetch logd urandom-seed urngd \</span><br><span class="line">default-settings luci luci-<span class="keyword">app</span>-accesscontrol luci-<span class="keyword">app</span>-adbyby-plus luci-<span class="keyword">app</span>-aliddns luci-<span class="keyword">app</span>-arpbind luci-<span class="keyword">app</span>-autoreboot \</span><br><span class="line">luci-<span class="keyword">app</span>-ddns luci-<span class="keyword">app</span>-dnspod luci-<span class="keyword">app</span>-filebrowser luci-<span class="keyword">app</span>-filetransfer luci-<span class="keyword">app</span>-flowoffload \</span><br><span class="line">luci-<span class="keyword">app</span>-hd-idle luci-<span class="keyword">app</span>-koolproxyR luci-<span class="keyword">app</span>-mwan3 luci-<span class="keyword">app</span>-nft-qos luci-<span class="keyword">app</span>-nlbwmon luci-<span class="keyword">app</span>-ntpc \</span><br><span class="line">luci-<span class="keyword">app</span>-openvpn luci-<span class="keyword">app</span>-openvpn-server luci-<span class="keyword">app</span>-pptp-server luci-<span class="keyword">app</span>-ramfree luci-<span class="keyword">app</span>-samba4 \</span><br><span class="line">luci-<span class="keyword">app</span>-serverchan luci-<span class="keyword">app</span>-sqm luci-<span class="keyword">app</span>-ssr-plus luci-<span class="keyword">app</span>-ssrserver-python luci-<span class="keyword">app</span>-syncdial luci-<span class="keyword">app</span>-upnp \</span><br><span class="line">luci-<span class="keyword">app</span>-usb-printer luci-<span class="keyword">app</span>-v2ray-server luci-<span class="keyword">app</span>-vlmcsd luci-<span class="keyword">app</span>-vsftpd luci-<span class="keyword">app</span>-watchcat \</span><br><span class="line">luci-<span class="keyword">app</span>-wifischedule luci-<span class="keyword">app</span>-wol luci-<span class="keyword">app</span>-wrtbwmon luci-<span class="keyword">app</span>-xlnetacc luci-<span class="keyword">app</span>-zerotier</span><br></pre></td></tr></table></figure>
+<p><del>其中，<code>default-settings luci</code> 必须要有，其他内容你根据选择使用。</del></p>
+<p><del>把 <code>DEFAULT_PACKAGES.router:=dnsmasq iptables ip6tables...</code> 其中的 <code>dnsmasq</code> 改为 <code>dnsmasq-full</code> ，我修改好的内容见下方。</del></p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DEFAULT_PACKAGES.router:=dnsmasq-full iptables ip6tables<span class="built_in"> ppp </span>ppp-mod-pppoe<span class="built_in"> firewall </span>odhcpd-ipv6only odhcp6c kmod-ipt-offload</span><br></pre></td></tr></table></figure>
+<p><del>建议把 <code>ip6tables odhcpd-ipv6only odhcp6c</code> 这几个去掉，不然手机浏览有 <code>ipv6</code> 地址的网站时，可能不能访问；另外出国科学上网时也有干扰。</del></p>
+<p><del>###第五步，修改目标路由器固件的包</del></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">这一步我没做，这是网上查到的资料，我贴出来</span><br></pre></td></tr></table></figure>
+<p><del>在 <code>/home/openwrt/openwrt/target/linux/x86</code> 的 <code>Makefile</code> 里 <code>DEFAULT_PACKAGES</code> 处修改，</del></p>
+<p><del>我就加了个 <code>htop</code> ，方便观察，注意不要加 <code>autocore</code> ，加了后会和新版 <code>luci</code> 冲突，导致主页错误。</del></p>
+<p><del>如果你是实体机写盘安装，注意此处要加上相关硬件驱动，可参考 <code>lean</code> 此处的设置。如果你是只编译一个固件，也可加在上一步的 <code>DEFAULT_PACKAGES</code> 处。</del></p>
+<p><del>###第六步，应用<code>fullconenat</code></del></p>
+<p><del>拷贝 <code>lede/package/network/config/firewall/</code> 里的 <code>makefile文件</code> 及 <code>patches文件夹</code> 到 <code>openwrt</code> 下面的同目录里，覆盖 <code>openwrt</code> 官方的。</del></p>
+<p><del>###第七步，修改活动连接数</del></p>
+<p><del><code>openwrt</code> 官方的活动连接数较少，修改 <code>活动连接数</code> 在 <code>package/kernel/linux/files/sysctl-nf-conntrack.conf</code> 里 <code>net.netfilter.nf_conntrack_max=16384</code> 修改为 <code>65535</code> ，或者更大。</del></p>
+<p><del>###第八步，修改主机名和 <code>ssr-plus</code> 彩蛋</del></p>
+<p><del><code>openwrt/package/lean/default-settings/files/zzz-default-settings</code> ，  在 <code>zzz文件</code>中 <code>uci set system.@system[0].timezone=CST-8</code> 后增加</del></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">uci</span> <span class="selector-tag">set</span> <span class="selector-tag">system</span>.@<span class="keyword">system</span>[<span class="keyword">0</span>].<span class="keyword">hostname</span>=<span class="keyword">Openwrt</span>-<span class="keyword">x86</span></span><br></pre></td></tr></table></figure>
+<p><del><code>Openwrt-x86</code> 可以改为你想要的名字</del></p>
+<p><del>解封 <code>ssr</code> 彩蛋，在该文件 <code>exit 0</code> 上方适当的位置加上下列命令，安装后可以直接看到 <code>ssr-plus</code></del></p>
+<figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">echo</span> 0xDEADBEEF &gt; <span class="string">/etc/config/google_fu_mode</span></span><br></pre></td></tr></table></figure>
+<p><del>####附加步骤</del></p>
+<p><del>如果仅是自用固件，可以在该文件 <code>exit 0</code> 上方适当的位置加上加入下列命令，设置 <code>Wan网口</code> ，添加路由器 <code>pppoe拨号账户密码</code> ，装好即可上网</del></p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">uci set network<span class="selector-class">.wan</span><span class="selector-class">.proto</span>=<span class="string">'pppoe'</span></span><br><span class="line">uci set network<span class="selector-class">.wan</span><span class="selector-class">.username</span>=<span class="string">'宽带账号'</span></span><br><span class="line">uci set network<span class="selector-class">.wan</span><span class="selector-class">.password</span>=<span class="string">'宽带密码'</span></span><br><span class="line">uci set network<span class="selector-class">.wan</span><span class="selector-class">.ifname</span>=<span class="string">'eth3'</span>   <span class="comment">//我的wan接口是eth3，你要根据自己的路由器情况改</span></span><br><span class="line">uci set network<span class="selector-class">.wan6</span><span class="selector-class">.ifname</span>=<span class="string">'eth3'</span></span><br><span class="line">uci commit network</span><br></pre></td></tr></table></figure>
+<p><del>想要修改管理 <code>ip地址</code> 和 <code>lan口配置</code> ，可以在该文件 <code>exit 0</code> 上方适当的位置加上加上下列命令</del></p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">uci set network<span class="selector-class">.lan</span><span class="selector-class">.ipaddr</span>=<span class="string">'192.168.0.8'</span>    <span class="comment">//改成你想要默认的管理ip</span></span><br><span class="line">uci set network<span class="selector-class">.lan</span><span class="selector-class">.proto</span>=<span class="string">'static'</span>          <span class="comment">//lan口静态IP方式</span></span><br><span class="line">uci set network<span class="selector-class">.lan</span><span class="selector-class">.type</span>=<span class="string">'bridge'</span>           <span class="comment">//设置桥接</span></span><br><span class="line">uci set network<span class="selector-class">.lan</span><span class="selector-class">.ifname</span>=<span class="string">'eth0 eth1 eth2 eth4 eth5'</span> <span class="comment">//根据自己的路由器情况改Lan口 </span></span><br><span class="line">uci commit network</span><br></pre></td></tr></table></figure>
+<p><del>###第九步，<code>v2ray</code> 及 <code>ssr-puls</code> 版本的处理</del></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">这一步我没做，这是网上查到的资料，我贴出来</span><br></pre></td></tr></table></figure>
+<p><del>####第一步，如果 <code>v2ray</code> 官方有最新版，我们可以在 <code>openwrt/package/lean/v2ray/makefile</code> 里 <code>PKG_VERSION:=v4.18.0</code> 修改成最新版本号。（目前 <code>lean</code> 已经改为预编译好的 <code>v2ray</code> 了，因此此处无需修改）</del></p>
+<p><del>####第二步，修改<code>ssr-plus</code></del> </p>
+<p><del>在新 <code>luci</code> 下需要处理下，不然安装后不能科学上网，你增加服务器的时候会出现错误</del></p>
+<p><del>删除 <code>luci-app-ssr-plus/luasrc/model/cbi/shadowsocksr/server.lua</code> 和 <code>client-config.lua</code> 里的 <code>local ipkg = require(&quot;luci.model.ipkg&quot;)</code></del></p>
+<p><del>然后新版下就可以输入你的 <code>vps服务器地址</code> 了</del></p>
+<p><del>###以上处理根据习惯处理好了，就可以安装feeds包了</del></p>
+<p><del>打开openwrt文件夹，右键“在终端打开”运行下列命令</del></p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.<span class="regexp">/scripts/</span>feeds update -a &amp;&amp; .<span class="regexp">/scripts/</span>feeds install -a</span><br></pre></td></tr></table></figure>
+<p><del>###第十步，个性化界面</del></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">这一步我没做，这是网上查到的资料，我贴出来</span><br></pre></td></tr></table></figure>
+<p><del>运行好了后我们可以对<code>luci</code>进行修改。要原汁原味可以不做修改</del></p>
+<p><del>####第一步，<code>openwrt</code> 默认是以 <code>kb</code> 显示内存可用数的，我们可以修改为 <code>MB</code> 显示</del></p>
+<p><del>打开这个文件，找到下面的内存处，修改 <code>1024</code> 改为 <code>1048576</code> ，后面的 <code>kb</code> 改为 <code>MB</code></del></p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openwrt<span class="regexp">/feeds/</span>luci<span class="regexp">/modules/</span>luci-mod-status<span class="regexp">/htdocs/</span>luci-<span class="keyword">static</span><span class="regexp">/resources/</span>view<span class="regexp">/status/i</span>ndex.js</span><br></pre></td></tr></table></figure>
+<p><del>####第二步，打开这个文件，</del></p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="regexp">/feeds/</span>luci<span class="regexp">/modules/</span>luci-mod-status<span class="regexp">/luasrc/</span>view<span class="regexp">/admin_status/i</span>ndex<span class="regexp">/10-system.htm</span></span><br></pre></td></tr></table></figure>
+<p><del>打开之后，把第三个</del></p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;div class=<span class="string">"tr"</span>&gt;&lt;div class=<span class="string">"td left"</span> width=<span class="string">"33%"</span>&gt;&lt;%<span class="symbol">:Architecture%&gt;&lt;/div&gt;&lt;div</span> class=<span class="string">"td left"</span>&gt;&lt;%=pcdata(boardinfo.system <span class="keyword">or</span> <span class="string">"?"</span>)%&gt;&lt;<span class="regexp">/div&gt;&lt;/div</span>&gt;</span><br></pre></td></tr></table></figure>
+<p><del>修改为下面的</del></p>
+<figure class="highlight erb"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"tr"</span>&gt;</span><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"td left"</span> <span class="attr">width</span>=<span class="string">"33%"</span>&gt;</span><span class="tag">&lt;<span class="name">%</span></span></span><span class="ruby"><span class="symbol">:Architecture</span></span><span class="xml"><span class="tag">%&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"td left"</span>&gt;</span><span class="tag">&lt;<span class="name">%=</span></span></span><span class="ruby">pcdata(boardinfo.system <span class="keyword">or</span> <span class="string">"?"</span>)</span><span class="xml"><span class="tag">%&gt;</span>：<span class="tag">&lt;<span class="name">%=</span></span></span><span class="ruby">luci.sys.exec(<span class="string">"cat /proc/cpuinfo | grep 'core id' | sort -u | wc -l "</span>)</span><span class="xml"><span class="tag">%&gt;</span>Core<span class="tag">&lt;<span class="name">%=</span></span></span><span class="ruby">luci.sys.exec(<span class="string">"cat /proc/cpuinfo | grep 'processor' | wc -l"</span>)</span><span class="xml"><span class="tag">%&gt;</span>Thread<span class="tag">&lt;/<span class="name">div</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+<p><del>要显示<code>目前cpu频率</code>，可以在上面的代码回车后，加上一行</del></p>
+<figure class="highlight erb"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"tr"</span>&gt;</span><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"td left"</span> <span class="attr">width</span>=<span class="string">"33%"</span>&gt;</span><span class="tag">&lt;<span class="name">%</span></span></span><span class="ruby"><span class="symbol">:CPU</span> Info</span><span class="xml"><span class="tag">%&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"td left"</span>&gt;</span><span class="tag">&lt;<span class="name">%=</span></span></span><span class="ruby">luci.sys.exec(<span class="string">"grep 'MHz' /proc/cpuinfo | cut -c11- |sed -n '1p'"</span>)</span><span class="xml"><span class="tag">%&gt;</span> MHz <span class="tag">&lt;<span class="name">%=</span></span></span><span class="ruby">luci.sys.exec(<span class="string">"sensors | grep 'Core 0' | cut -c10-24"</span>)</span><span class="xml"><span class="tag">%&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+<p><del>###第十一步，编译</del></p>
+<p><del>在<code>终端</code>输入以下内容进行编译</del></p>
+<figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">cd</span> <span class="string">./openwrt</span></span><br><span class="line"><span class="string">./scripts/feeds</span> update -a &amp;&amp; <span class="string">./scripts/feeds</span> install -a</span><br><span class="line">make menuconfig</span><br></pre></td></tr></table></figure>
+<p><del>然后就可以和上文接上了。</del></p>
+<h2 id="翻车了翻车了，不要问为什么，问就是翻车了"><a href="#翻车了翻车了，不要问为什么，问就是翻车了" class="headerlink" title="翻车了翻车了，不要问为什么，问就是翻车了"></a>翻车了翻车了，不要问为什么，问就是翻车了</h2><hr>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">下面才是正片！！</span><br><span class="line">下面才是正片！！</span><br><span class="line">下面才是正片！！</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="第二部分，翻车又给翻回来了"><a href="#第二部分，翻车又给翻回来了" class="headerlink" title="第二部分，翻车又给翻回来了"></a>第二部分，翻车又给翻回来了</h1><h2 id="山重水复疑无路，柳暗花明又一村"><a href="#山重水复疑无路，柳暗花明又一村" class="headerlink" title="山重水复疑无路，柳暗花明又一村"></a>山重水复疑无路，柳暗花明又一村</h2><h3 id="正在我打算放弃的时候，竟然发现-Lean-的固件又让我给编译成功了。。"><a href="#正在我打算放弃的时候，竟然发现-Lean-的固件又让我给编译成功了。。" class="headerlink" title="正在我打算放弃的时候，竟然发现  Lean 的固件又让我给编译成功了。。"></a>正在我打算放弃的时候，竟然发现  <code>Lean</code> 的固件又让我给编译成功了。。</h3><h3 id="话不多说，下面开始教程"><a href="#话不多说，下面开始教程" class="headerlink" title="话不多说，下面开始教程"></a>话不多说，下面开始教程</h3><h2 id="第一步，布置环境-1"><a href="#第一步，布置环境-1" class="headerlink" title="第一步，布置环境"></a>第一步，布置环境</h2><h3 id="第一步：安装-VMware-Workstation-Pro-1"><a href="#第一步：安装-VMware-Workstation-Pro-1" class="headerlink" title="第一步：安装 VMware Workstation Pro"></a>第一步：安装 <code>VMware Workstation Pro</code></h3><p>备注一下：请安装最新版的 <code>VMware Workstation Pro</code> ，否则 <code>VMware Workstation Pro</code> 可能会与 <code>宿主机</code> 产生兼容性问题</p>
+<h3 id="第二步：下载ubuntu-18-04-3-desktop-amd64-iso-1"><a href="#第二步：下载ubuntu-18-04-3-desktop-amd64-iso-1" class="headerlink" title="第二步：下载ubuntu-18.04.3-desktop-amd64.iso"></a>第二步：下载<code>ubuntu-18.04.3-desktop-amd64.iso</code></h3><p><a href="http://releases.ubuntu.com/18.04.3/ubuntu-18.04.3-desktop-amd64.iso" target="_blank" rel="noopener">点击下载 ubuntu-18.04.3-desktop-amd64.iso</a></p>
+<h3 id="第三步：将下载的-ubuntu-18-04-3-desktop-amd64-iso-安装到-VMware-Workstation-中-1"><a href="#第三步：将下载的-ubuntu-18-04-3-desktop-amd64-iso-安装到-VMware-Workstation-中-1" class="headerlink" title="第三步：将下载的 ubuntu-18.04.3-desktop-amd64.iso 安装到 VMware Workstation 中"></a>第三步：将下载的 <code>ubuntu-18.04.3-desktop-amd64.iso</code> 安装到 <code>VMware Workstation</code> 中</h3><p>我个人的安装方法是 <code>VMware Workstation Pro</code> 自带的快速安装，硬盘大小差不多 <code>80-100G</code> ，不够用了再用 <code>gparted</code> 扩就行了</p>
+<p>一个 <code>sudo apt-get install gparted</code> 的事，分完区重启就行了</p>
+<h3 id="第四步，如果你不是快速安装，那么请你自行安装-VMware-Tools-1"><a href="#第四步，如果你不是快速安装，那么请你自行安装-VMware-Tools-1" class="headerlink" title="第四步，如果你不是快速安装，那么请你自行安装 VMware Tools"></a>第四步，如果你不是快速安装，那么请你自行安装 <code>VMware Tools</code></h3><p>这样，基本环境就布置好了</p>
+<h2 id="第二步，开始编译-1"><a href="#第二步，开始编译-1" class="headerlink" title="第二步，开始编译"></a>第二步，开始编译</h2><p>以下内容基于 <a href="https://github.com/coolsnowwolf/lede" target="_blank" rel="noopener">Welcome to Lean’s  git source of OpenWrt and packages</a> 修改</p>
+<p>感谢 <code>Lean</code> 提供支持</p>
+<hr>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">注意：</span><br><span class="line"></span><br><span class="line"><span class="number">1.</span> 不要用 root 用户 git 和编译！！！</span><br><span class="line"></span><br><span class="line"><span class="number">2.</span> 国内用户编译前最好准备好梯子</span><br><span class="line"></span><br><span class="line"><span class="number">3.</span> 默认登陆IP <span class="number">192.168</span><span class="number">.1</span><span class="number">.1</span>, 密码 password</span><br></pre></td></tr></table></figure>
+<h3 id="第一步：命令行输入-sudo-apt-get-update-，然后输入-1"><a href="#第一步：命令行输入-sudo-apt-get-update-，然后输入-1" class="headerlink" title="第一步：命令行输入 sudo apt-get update ，然后输入"></a>第一步：命令行输入 <code>sudo apt-get update</code> ，然后输入</h3><figure class="highlight q"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-<span class="built_in">get</span> -y install build-essential asciidoc binutils bzip2 gawk gettext git libncurses5-<span class="built_in">dev</span> libz-<span class="built_in">dev</span> patch unzip zlib1g-<span class="built_in">dev</span> lib32gcc1 libc6-<span class="built_in">dev</span>-i386 subversion flex uglifyjs git-core gcc-multilib p7zip p7zip-full msmtp libssl-<span class="built_in">dev</span> texinfo libglib2<span class="number">.0</span>-<span class="built_in">dev</span> xmlto qemu-utils upx libelf-<span class="built_in">dev</span> autoconf automake libtool autopoint device-tree-compiler</span><br></pre></td></tr></table></figure>
+<h3 id="第二步，执行git-clone-1"><a href="#第二步，执行git-clone-1" class="headerlink" title="第二步，执行git clone"></a>第二步，执行<code>git clone</code></h3><p>我直接在 <code>home</code> 目录下执行 <code>git clone</code> 的，如果你在其他地方执行，切记，路径不能有中文</p>
+<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd ~</span><br><span class="line">git <span class="keyword">clone</span> <span class="title">https</span>://github.com/coolsnowwolf/lede</span><br></pre></td></tr></table></figure>
+<h3 id="第三步，进入-lede-子目录-1"><a href="#第三步，进入-lede-子目录-1" class="headerlink" title="第三步，进入 lede 子目录"></a>第三步，进入 <code>lede</code> 子目录</h3><figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">cd</span> <span class="string">./lede</span></span><br></pre></td></tr></table></figure>
+<h4 id="附加步骤：-1"><a href="#附加步骤：-1" class="headerlink" title="附加步骤："></a>附加步骤：</h4><h5 id="编译前下载好-DL包-，可大量缩减首次编译时间；使用-涡轮增雕法-，可把大雕删除的软件打包回去编译-1"><a href="#编译前下载好-DL包-，可大量缩减首次编译时间；使用-涡轮增雕法-，可把大雕删除的软件打包回去编译-1" class="headerlink" title="编译前下载好 DL包 ，可大量缩减首次编译时间；使用 涡轮增雕法 ，可把大雕删除的软件打包回去编译"></a>编译前下载好 <code>DL包</code> ，可大量缩减首次编译时间；使用 <code>涡轮增雕法</code> ，可把大雕删除的软件打包回去编译</h5><h6 id="DL包使用方法：dl-tgz-放进-home-mj-目录，解压，执行以下命令-1"><a href="#DL包使用方法：dl-tgz-放进-home-mj-目录，解压，执行以下命令-1" class="headerlink" title="DL包使用方法：dl.tgz 放进 /home/mj/ 目录，解压，执行以下命令"></a><code>DL包</code>使用方法：<code>dl.tgz</code> 放进 <code>/home/mj/</code> 目录，解压，执行以下命令</h6><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ln -s <span class="regexp">/home/m</span>j<span class="regexp">/dl /</span>home<span class="regexp">/mj/</span>lede</span><br></pre></td></tr></table></figure>
+<h6 id="涡轮增雕法使用方法：diy-tgz-放进-home-mj-目录，解压，执行以下命令-1"><a href="#涡轮增雕法使用方法：diy-tgz-放进-home-mj-目录，解压，执行以下命令-1" class="headerlink" title="涡轮增雕法使用方法：diy.tgz 放进 /home/mj/ 目录，解压，执行以下命令"></a><code>涡轮增雕法</code>使用方法：<code>diy.tgz</code> 放进 <code>/home/mj/</code> 目录，解压，执行以下命令</h6><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ln -s <span class="regexp">/home/m</span>j<span class="regexp">/diy /</span>home<span class="regexp">/mj/</span>lede<span class="regexp">/package/</span>openwrt-packages</span><br></pre></td></tr></table></figure>
+<p>这样编译时就会加载 <code>/package/lean</code> 和 <code>/package/openwrt-packages（量子领域）</code> ，如果这2个文件夹里的插件包同名则优先编译 <code>/package/lean</code> 里的插件</p>
+<p>使用涡轮增雕法，可通过在量子领域里把插件打包回去编译，例如 <code>KPR</code> ， <code>Verysync</code> ， <code>Serverchan</code> ， <code>BaiduPCS-Web</code></p>
+<h6 id="下载链接-1"><a href="#下载链接-1" class="headerlink" title="下载链接"></a>下载链接</h6><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">链接: https:<span class="regexp">//</span>pan.baidu.com<span class="regexp">/s/</span><span class="number">1</span>dy4L8b775NRCApd8mXZ9Cg 密码: mjdl</span><br></pre></td></tr></table></figure>
+<h3 id="第四步（可选），自定义要安装的包"><a href="#第四步（可选），自定义要安装的包" class="headerlink" title="第四步（可选），自定义要安装的包"></a>第四步（可选），自定义要安装的包</h3><p>如果你对你要重复编译一个固件（比如说我），下面的操作会让你更省时省力</p>
+<p>修改 <code>openwrt/include/target.mk</code> 文件</p>
+<p>在 <code>DEFAULT_PACKAGES:=base-files libc libgcc busybox dropbear mtd uci opkg netifd fstools uclient-fetch logd</code> 后面加上自己想要编译的内容</p>
+<p>也就是说在你这句话原有的基础上修改，<code>default-settings</code> 之前的内容和我的一样不一样没有关系，我们修改的是他后面的内容</p>
+<p>我修改好的文件是这样的，每句话最后的 \是换行用的</p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># Default packages - the really basic <span class="keyword">set</span></span><br><span class="line">DEFAULT_PACKAGES:=base-files libc libgcc busybox dropbear mtd uci opkg netifd fstools uclient-fetch logd block-mount coremark \</span><br><span class="line">kmod-nf-nathelper kmod-nf-nathelper-extra kmod-ipt-raw wget libustream-openssl <span class="keyword">ca</span>-certificates \</span><br><span class="line">default-settings luci luci-<span class="keyword">app</span>-accesscontrol luci-<span class="keyword">app</span>-adbyby-plus luci-<span class="keyword">app</span>-aliddns luci-<span class="keyword">app</span>-arpbind luci-<span class="keyword">app</span>-autoreboot \</span><br><span class="line">luci-<span class="keyword">app</span>-ddns luci-<span class="keyword">app</span>-dnspod luci-<span class="keyword">app</span>-filetransfer luci-<span class="keyword">app</span>-sfe luci-<span class="keyword">app</span>-flowoffload luci-<span class="keyword">app</span>-frpc \</span><br><span class="line">luci-<span class="keyword">app</span>-hd-idle luci-<span class="keyword">app</span>-koolproxyR luci-<span class="keyword">app</span>-mwan3 luci-<span class="keyword">app</span>-nft-qos luci-<span class="keyword">app</span>-nlbwmon luci-<span class="keyword">app</span>-ntpc \</span><br><span class="line">luci-<span class="keyword">app</span>-openvpn luci-<span class="keyword">app</span>-openvpn-server luci-<span class="keyword">app</span>-pptp-server luci-<span class="keyword">app</span>-ramfree luci-<span class="keyword">app</span>-samba \</span><br><span class="line">luci-<span class="keyword">app</span>-serverchan luci-<span class="keyword">app</span>-sqm luci-<span class="keyword">app</span>-ssr-plus luci-<span class="keyword">app</span>-syncdial luci-<span class="keyword">app</span>-transmission luci-<span class="keyword">app</span>-upnp \</span><br><span class="line">luci-<span class="keyword">app</span>-usb-printer luci-<span class="keyword">app</span>-v2ray-server luci-<span class="keyword">app</span>-vlmcsd luci-<span class="keyword">app</span>-vsftpd luci-<span class="keyword">app</span>-watchcat \</span><br><span class="line">luci-<span class="keyword">app</span>-wifischedule luci-<span class="keyword">app</span>-wol luci-<span class="keyword">app</span>-wrtbwmon luci-<span class="keyword">app</span>-xlnetacc luci-<span class="keyword">app</span>-zerotier</span><br></pre></td></tr></table></figure>
+<h3 id="第五步，更新-FEEDS"><a href="#第五步，更新-FEEDS" class="headerlink" title="第五步，更新 FEEDS"></a>第五步，更新 <code>FEEDS</code></h3><figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">cd</span> <span class="string">./lede</span></span><br><span class="line"><span class="string">./scripts/feeds</span> update -a</span><br><span class="line"><span class="string">./scripts/feeds</span> install -a</span><br></pre></td></tr></table></figure>
+<h3 id="第六步，执行-make-menuconfig，选择编译的参数"><a href="#第六步，执行-make-menuconfig，选择编译的参数" class="headerlink" title="第六步，执行 make menuconfig，选择编译的参数"></a>第六步，执行 <code>make menuconfig</code>，选择编译的参数</h3><p>注意，在执行这个命令之前一定要把终端窗口调大</p>
+<p>否则会因为窗口小无法启动“OpenWrt Configuration”而报错！！</p>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">make menuconfig</span></span><br></pre></td></tr></table></figure>
+<h4 id="基本三步走-1"><a href="#基本三步走-1" class="headerlink" title="基本三步走"></a>基本三步走</h4><h5 id="第一步，首先先去-Target-System-选择你的-CPU架构-1"><a href="#第一步，首先先去-Target-System-选择你的-CPU架构-1" class="headerlink" title="第一步，首先先去 Target System 选择你的 CPU架构"></a>第一步，首先先去 <code>Target System</code> 选择你的 <code>CPU架构</code></h5><h6 id="我选择的是-BCM2711-boards-64-bit-1"><a href="#我选择的是-BCM2711-boards-64-bit-1" class="headerlink" title="我选择的是 BCM2711 boards (64 bit)"></a>我选择的是 <code>BCM2711 boards (64 bit)</code></h6><h5 id="第二步，其次去-Subtarget-选择你的-CPU型号-1"><a href="#第二步，其次去-Subtarget-选择你的-CPU型号-1" class="headerlink" title="第二步，其次去 Subtarget 选择你的 CPU型号"></a>第二步，其次去 <code>Subtarget</code> 选择你的 <code>CPU型号</code></h5><h6 id="我选择的是-Subtarget-BCM2711-boards-64-bit-1"><a href="#我选择的是-Subtarget-BCM2711-boards-64-bit-1" class="headerlink" title="我选择的是 Subtarget (BCM2711 boards (64 bit))"></a>我选择的是 <code>Subtarget (BCM2711 boards (64 bit))</code></h6><h5 id="第三步，最后去-Target-Profile选择你的-机器型号-1"><a href="#第三步，最后去-Target-Profile选择你的-机器型号-1" class="headerlink" title="第三步，最后去 Target Profile选择你的 机器型号"></a>第三步，最后去 <code>Target Profile</code>选择你的 <code>机器型号</code></h5><h6 id="我选择的是-Target-Profile-Raspberry-Pi-4B-1"><a href="#我选择的是-Target-Profile-Raspberry-Pi-4B-1" class="headerlink" title="我选择的是 Target Profile (Raspberry Pi 4B)"></a>我选择的是 <code>Target Profile (Raspberry Pi 4B)</code></h6><p>这里注意一下，如果没有刷新出来你的型号，可能是你的网络不好</p>
+<p>这时你可以去看看<code>Openwrt</code>官方有没有，多试几次</p>
+<h4 id="接下来是详细的设置-1"><a href="#接下来是详细的设置-1" class="headerlink" title="接下来是详细的设置"></a>接下来是详细的设置</h4><h5 id="第一步，调整Target-Images-gt-Kernel-partition-size-in-MB-的大小，我一口气给他设置了-128-MB-1"><a href="#第一步，调整Target-Images-gt-Kernel-partition-size-in-MB-的大小，我一口气给他设置了-128-MB-1" class="headerlink" title="第一步，调整Target Images &gt; Kernel partition size (in MB)的大小，我一口气给他设置了 128 MB"></a>第一步，调整<code>Target Images &gt; Kernel partition size (in MB)</code>的大小，我一口气给他设置了 <code>128</code> MB</h5><h5 id="第二步，调整Target-Images-gt-Root-filesystem-partition-size-in-MB-的大小，我又一口气给他设置了-512-MB-1"><a href="#第二步，调整Target-Images-gt-Root-filesystem-partition-size-in-MB-的大小，我又一口气给他设置了-512-MB-1" class="headerlink" title="第二步，调整Target Images &gt; Root filesystem partition size (in MB)的大小，我又一口气给他设置了 512 MB"></a>第二步，调整<code>Target Images &gt; Root filesystem partition size (in MB)</code>的大小，我又一口气给他设置了 <code>512</code> MB</h5><p>反正32G内存卡，不嫌地大~ 你别设置太小了，不然后边编译会出错</p>
+<p>接下来的选项，按 <code>y</code> 表示编译进 <code>Openwrt</code> ，按 <code>n</code> 取消编译进 <code>Openwrt</code> ，按 <code>m</code> 表示编译成 <code>模块</code> 或者 <code>IPK包</code></p>
+<h5 id="第三步，进入-gt-LuCI-gt-1-Collections-，选择一个你想要的界面-1"><a href="#第三步，进入-gt-LuCI-gt-1-Collections-，选择一个你想要的界面-1" class="headerlink" title="第三步，进入 &gt; LuCI &gt; 1. Collections ，选择一个你想要的界面"></a>第三步，进入 <code>&gt; LuCI &gt; 1. Collections</code> ，选择一个你想要的界面</h5><h5 id="第四步，进入-gt-LuCI-gt-2-Modules-gt-Translations-，选择你的语言-1"><a href="#第四步，进入-gt-LuCI-gt-2-Modules-gt-Translations-，选择你的语言-1" class="headerlink" title="第四步，进入 &gt; LuCI &gt; 2. Modules &gt; Translations ，选择你的语言"></a>第四步，进入 <code>&gt; LuCI &gt; 2. Modules &gt; Translations</code> ，选择你的语言</h5><h5 id="第五步，进入-gt-LuCI-gt-4-Themes-，选择你想编译进去的主题-1"><a href="#第五步，进入-gt-LuCI-gt-4-Themes-，选择你想编译进去的主题-1" class="headerlink" title="第五步，进入 &gt; LuCI &gt; 4. Themes ，选择你想编译进去的主题"></a>第五步，进入 <code>&gt; LuCI &gt; 4. Themes</code> ，选择你想编译进去的主题</h5><h5 id="第六步，进入-gt-LuCI-gt-3-Applications-，选择你需要编译进去的应用-1"><a href="#第六步，进入-gt-LuCI-gt-3-Applications-，选择你需要编译进去的应用-1" class="headerlink" title="第六步，进入 &gt; LuCI &gt; 3. Applications ，选择你需要编译进去的应用"></a>第六步，进入 <code>&gt; LuCI &gt; 3. Applications</code> ，选择你需要编译进去的应用</h5><h5 id="第七步，进入-gt-Kernel-modules-去选择你想支持的-Filesystems-USB-Support-等等驱动，比如说：-1"><a href="#第七步，进入-gt-Kernel-modules-去选择你想支持的-Filesystems-USB-Support-等等驱动，比如说：-1" class="headerlink" title="第七步，进入 &gt; Kernel modules 去选择你想支持的 Filesystems ,  USB Support 等等驱动，比如说："></a>第七步，进入 <code>&gt; Kernel modules</code> 去选择你想支持的 <code>Filesystems</code> ,  <code>USB Support</code> 等等驱动，比如说：</h5><p>我还打算插一个 <code>AX88179</code> 的 <code>USB网卡</code> ，</p>
+<p>所以需要选择 <code>&gt; Kernel modules &gt; USB Support</code> 下的 <code>kmod-usb-net-asix-ax88179</code></p>
+<p>关于 <code>Applications</code> 说明，请看下面的介绍</p>
+<p>以下说明来自 <a href="https://wp.gxnas.com/2366.html" target="_blank" rel="noopener">OpenWrt 编译 LuCI -&gt; Applications 添加插件应用说明</a></p>
+<figure class="highlight xl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br></pre></td><td class="code"><pre><span class="line">选择LuCI 配置：  常用</span><br><span class="line">-----------------------------------------------------------------------------------------</span><br><span class="line">L大雕 选择LuCI 配置：</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-adbyby-plus   #去广告</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-arpbind  #IP/MAC绑定</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-autoreboot  #高级重启</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-aliddns   #阿里DDNS客户端</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-ddns   #动态域名 DNS </span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-filetransfer  #文件传输</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-firewall   #添加防火墙</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-frpc   #内网穿透 Frp</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-guest-wifi  #WiFi访客网络</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-hd-idle  #硬盘休眠</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-ipsec-virtual**d  #virtual**服务器 IPSec</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-mwan3   #MWAN负载均衡</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-nft-qos  #QOS流控 Nftables版</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-nlbwmon   #网络带宽监视器</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-p p t p-server  #virtual**服务器 p p t p </span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-ramfree  #释放内存</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-samba   #网络共享(Samba)</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-sfe  #Turbo ACC网络加速(开启Fast Path转发加速)</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-sqm  #流量智能队列管理(QOS)</span><br><span class="line">-------------------------------------------------------------------------------------------</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-S-S R-plus   #S-S R兲朝上网Plus+</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> <span class="function"><span class="title">luci</span>-app-S-S R-plus ---&gt;</span> Include s-s New Versiong  #新SS代理</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> <span class="function"><span class="title">luci</span>-app-S-S R-plus ---&gt;</span> Include V2ray  #V2Ray透明代理</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> <span class="function"><span class="title">luci</span>-app-S-S R-plus ---&gt;</span> Include Kcptun  #Kcptun代理</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> <span class="function"><span class="title">luci</span>-app-S-S R-plus ---&gt;</span> Include s-sR Server  #S-S R客户端</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> <span class="function"><span class="title">luci</span>-app-S-S R-plus ---&gt;</span> Include s-sR Socks <span class="built_in">and</span> Tunnel  #S-S R代理</span><br><span class="line">-------------------------------------------------------------------------------------------</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-syncdial  #多拨虚拟网卡(原macvlan)</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-upnp   #通用即插即用UPnP(端口自动转发)</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-v2ray-pro  #V2Ray透明代理</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-vlmcsd  #KMS服务器设置</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-vsftpd  #FTP服务器</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-webadmin  #Web管理页面设置</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-wifischedule  #WiFi 计划</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-wireless-regdb  #WiFi无线</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-wol   #WOL网络唤醒</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-wrtbwmon  #实时流量监测</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-xlnetacc  #迅雷快鸟</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-zerotier  #ZeroTier内网穿透</span><br><span class="line">U<span class="function"><span class="title">tilities</span>  ---&gt;</span>  open-vm-tools  #打开适用于VMware的VM Tools</span><br><span class="line">-----------------------------------------------------------------------------------------</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-adblock   #ADB广告过滤</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-advanced-reboot  #Linksys高级重启</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-ahcp  #支持AHCPd</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-amule  #aMule下载工具</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-aria2 # Aria2下载工具</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-asterisk  #支持Asterisk电话服务器</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-attendedsysupgrade  #固件更新升级相关</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-bcp38  #BCP38网络入口过滤(不确定)</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-bird4   #Bird <span class="number">4</span>(未知)</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-bird6   #Bird <span class="number">6</span>(未知)</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-bmx6  #BMX6路由协议</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-bmx7  #BMX7路由协议</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-caldav  #联系人</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-cjdns  #加密IPV6网络相关</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-clamav  #ClamAV杀毒软件</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-commands   #Shell命令模块</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-cshark   #CloudShark捕获工具</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-diag-core   #core诊断工具</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-dnscrypt-proxy  #DNSCrypt解决DNS污染</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-dnscrypt-dnsforwarder  #DNSForwarder防DNS污染</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-dump1090  #民航无线频率(不确定)</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-dynapoint  #DynaPoint(未知)</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-e2guardian   #Web内容过滤器</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-freifunk-diagnostics   #诊断(未知)</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-freifunk-policyrouting  #策略路由(未知)</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-freifunk-widgets  #索引(未知)</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-fwknopd  #Firewall Knock Operator服务器</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-gfwlist   #GFW域名列表？</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-hnet  #Homenet Status家庭网络控制协议</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-kooldns  #virtual**服务器 ddns替代方案</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-koolproxy  #KP去广告</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-lxc   #LXC容器管理</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-meshwizard #网络设置向导</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-minidlna   #完全兼容DLNA / UPnP-AV客户端的服务器软件</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-mjpg-streamer   #兼容Linux-UVC的摄像头程序</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-mmc-over-gpio   #添加SD卡操作界面?</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-multiwan   #多拨虚拟网卡?</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-n2n_v2   #N2N内网穿透 N2N v2 virtual**服务</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-noddos  #NodDOS Clients 阻止DDoS攻击</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-ntpc   #NTP时间同步服务器</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-ocserv  #OpenConnect virtual**</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-olsr  #OLSR配置和状态模块</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-olsr-services  #OLSR服务器</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-olsr-viz   #OLSR可视化</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-ocserv   #OpenConnect virtual**服务?</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-openvirtual**  #Openvirtual**客户端</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-openvirtual**-server  #易于使用的Openvirtual**服务器 Web-UI</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-oscam   #OSCAM服务器?</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-p910nd   #打印服务器模块</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-pagekitee   #Pagekite内网穿透客户端</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-polipo  #Polipo代理(是一个小型且快速的网页缓存代理)</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-pppoe-relay  #PPPoE NAT穿透 点对点协议(PPP)</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-privoxy  #Privoxy网络代理(带过滤无缓存)</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-qos   #流量服务质量(QoS)流控</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-radicale   #CalDAV/CardDAV同步工具</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-rp-pppoe-server  #Roaring Penguin PPPoE Server 服务器</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-s-s-libes  #SS-libev服务端</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-shairplay  #支持AirPlay功能</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-siitwizard  #SIIT配置向导  SIIT-Wizzard</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-simple-adblock  #简单的广告拦截</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-simple-softethervirtual**  #SoftEther virtual**服务器  NAT穿透</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-splash  #Client-Splash是无线MESH网络的一个热点认证系统</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-squid   #Squid代理服务器</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-S-S R-pro  #S-S R-Pro</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-s-s   #SS兲朝上网?</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-S-S Rserver-python  #s-sR Python服务器</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-statistics  #流量监控工具</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-tinyproxy  #Tinyproxy是 HTTP(S)代理服务器</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-transmission   #BT下载工具</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-travelmate  #旅行路由器</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-ttyd   #网页终端命令行</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-udpxy  #udpxy做组播服务器</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-uhttpd  #uHTTPd Web服务器</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-unbound  #Unbound DNS解析器</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-usb-printer   #USB 打印服务器</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-vnstat   #vnStat网络监控(图表)</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-virtual**bypass  #virtual** BypassWebUI  绕过virtual**设置</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-watchcat  #断网检测功能与定时重启</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-webshell  #网页命令行终端?</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> A<span class="function"><span class="title">pplications</span> ---&gt;</span> luci-app-wireguard  #virtual**服务器 WireGuard状态</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> C<span class="function"><span class="title">ollections</span> ---&gt;</span> luci   #添加luci (web界面管理)</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> M<span class="function"><span class="title">odules</span> ---&gt;</span> T<span class="function"><span class="title">ranslations</span> ---&gt;</span> Simplified Chinese (zh-cn) #新版本中文语言包位置</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> T<span class="function"><span class="title">hemes</span> ---&gt;</span> luci-<span class="built_in">theme</span>-bootstrap   #默认主题，大家可以自行增减插件</span><br><span class="line">L<span class="function"><span class="title">uCI</span> ---&gt;</span> T<span class="function"><span class="title">ranslations</span> ---&gt;</span> luci-i18n-chinese   #添加luci的中文语言包</span><br><span class="line">---------------------------------------------------------------------------------------------------</span><br></pre></td></tr></table></figure>
+<h3 id="第七步，都选择好之后，保存退出，他的配置文件名字是-config-，别改名字-1"><a href="#第七步，都选择好之后，保存退出，他的配置文件名字是-config-，别改名字-1" class="headerlink" title="第七步，都选择好之后，保存退出，他的配置文件名字是 .config ，别改名字"></a>第七步，都选择好之后，保存退出，他的配置文件名字是 <code>.config</code> ，别改名字</h3><h3 id="最后，开始编译"><a href="#最后，开始编译" class="headerlink" title="最后，开始编译"></a>最后，开始编译</h3><h4 id="选择好你的路由之后，输入下面的命令（-j1-后面是线程数。第一次编译推荐用单线程，国内请尽量全局科学上网）即可开始编译你要的固件了。-1"><a href="#选择好你的路由之后，输入下面的命令（-j1-后面是线程数。第一次编译推荐用单线程，国内请尽量全局科学上网）即可开始编译你要的固件了。-1" class="headerlink" title="选择好你的路由之后，输入下面的命令（-j1 后面是线程数。第一次编译推荐用单线程，国内请尽量全局科学上网）即可开始编译你要的固件了。"></a>选择好你的路由之后，输入下面的命令（-j1 后面是线程数。第一次编译推荐用单线程，国内请尽量全局科学上网）即可开始编译你要的固件了。</h4><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make -j1 <span class="attribute">V</span>=s</span><br></pre></td></tr></table></figure>
+<h4 id="等待数小时就编译成功了。-1"><a href="#等待数小时就编译成功了。-1" class="headerlink" title="等待数小时就编译成功了。"></a>等待数小时就编译成功了。</h4><p>编译完成后固件输出在 <code>/lede/bin/targets/</code></p>
+<h3 id="以后二次编译：-1"><a href="#以后二次编译：-1" class="headerlink" title="以后二次编译："></a>以后二次编译：</h3><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">cd lede                                                          进入LEDE目录</span><br><span class="line">git pull                                                         同步更新大雕源码</span><br><span class="line">./scripts/feeds update -<span class="selector-tag">a</span> &amp;&amp; ./scripts/feeds install -<span class="selector-tag">a</span>          更新FEEDS</span><br><span class="line">rm -rf ./tmp &amp;&amp; rm -rf <span class="selector-class">.config</span>                                   清除编译配置和缓存</span><br><span class="line">make menuconfig                                                  进入编译配置菜单</span><br><span class="line">make -jn V=s                                                     n=线程数+<span class="number">1</span>，例如<span class="number">4</span>线程的I5填-j5，开始编译</span><br></pre></td></tr></table></figure>
+<h2 id="制作成功之后，推荐使用-Rufus-工具刷入"><a href="#制作成功之后，推荐使用-Rufus-工具刷入" class="headerlink" title="制作成功之后，推荐使用 Rufus 工具刷入"></a>制作成功之后，推荐使用 <code>Rufus</code> 工具刷入</h2><p><a href="https://rufus.ie/" target="_blank" rel="noopener">点击进入Rufus官网</a></p>
+<p><a href="https://cdn.jsdelivr.net/gh/Shadowairing/MyBlog_Data_Custom_00000@master/MISC/Rufus/rufus-3.8p.rar" target="_blank" rel="noopener">点击下载Rufus-3.8p</a></p>
+<h2 id="教程结束"><a href="#教程结束" class="headerlink" title="教程结束"></a>教程结束</h2><img src="/2019/10/20/OpenWrt-编译教程/主页面.png" title="主页面">
+<p>上面的图就是主页面，至于性能方面，我已经觉得很给力了</p>
+<p>测速网站：<a href="https://www.speedtest.net/" target="_blank" rel="noopener">https://www.speedtest.net</a></p>
+<img src="/2019/10/20/OpenWrt-编译教程/speedtest.png" title="speedtest">
+<p>话说了这么多，总该把下载链接丢出来了</p>
+<h3 id="已知-BUG"><a href="#已知-BUG" class="headerlink" title="已知 BUG"></a>已知 <code>BUG</code></h3><p>1.WIFI BUG：只有 <code>2.4G</code> 频段可以驱动，而且只能接收信号，不能发射 <code>WIFI</code></p>
+<p>2.一开始编译的时候用的是 <code>squashfs</code> 文件系统，结果发现 <code>设置好固件之后重刷配置还是原来设置的内容，即使是在格式化 Micro SD Card 的情况下也是如此</code> ，所以现在采用 <code>ext4</code> 格式的文件系统，<code>ext4</code> 格式的文件系统不能恢复出厂设置，所以想恢复只能重刷</p>
+<h3 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h3><h4 id="USB有线网卡我用的是-AX88179"><a href="#USB有线网卡我用的是-AX88179" class="headerlink" title="USB有线网卡我用的是 AX88179"></a>USB有线网卡我用的是 <code>AX88179</code></h4><h4 id="USB无线网卡我用的是-3070"><a href="#USB无线网卡我用的是-3070" class="headerlink" title="USB无线网卡我用的是 3070"></a>USB无线网卡我用的是 <code>3070</code></h4><h4 id="其他网卡驱动我可能也编译进去了，请自行测试"><a href="#其他网卡驱动我可能也编译进去了，请自行测试" class="headerlink" title="其他网卡驱动我可能也编译进去了，请自行测试~~"></a>其他网卡驱动我可能也编译进去了，请自行测试~~</h4><h4 id="如果刷入无法登录192-168-1-1，请自己设置固定ip"><a href="#如果刷入无法登录192-168-1-1，请自己设置固定ip" class="headerlink" title="如果刷入无法登录192.168.1.1，请自己设置固定ip"></a>如果刷入无法登录<code>192.168.1.1</code>，请自己设置固定ip</h4><h3 id="下载链接在下方，有几个部分组成的分段压缩包，把所有压缩包下载下来一起解压，SSH-功能默认开启，如需关闭请自行设置"><a href="#下载链接在下方，有几个部分组成的分段压缩包，把所有压缩包下载下来一起解压，SSH-功能默认开启，如需关闭请自行设置" class="headerlink" title="下载链接在下方，有几个部分组成的分段压缩包，把所有压缩包下载下来一起解压，SSH 功能默认开启，如需关闭请自行设置"></a>下载链接在下方，有几个部分组成的分段压缩包，把所有压缩包下载下来一起解压，<code>SSH</code> 功能默认开启，如需关闭请自行设置</h3><h4 id="提供几个版本："><a href="#提供几个版本：" class="headerlink" title="提供几个版本："></a>提供几个版本：</h4><h5 id="带-解锁网易云灰色歌曲-功能的"><a href="#带-解锁网易云灰色歌曲-功能的" class="headerlink" title="带 解锁网易云灰色歌曲 功能的"></a>带 <code>解锁网易云灰色歌曲</code> 功能的</h5><p><a href="https://cdn.jsdelivr.net/gh/Shadowairing/MyBlog_Data_Custom_00000@master/Openwrt/OpenWrt-Pi4B-first/OpenWrt-Pi-X64_with_unblockmusic/OpenWrt-Pi-X64_1.0.1_with_unblockmusic.part01.rar" target="_blank" rel="noopener">PART 01</a></p>
+<p><a href="https://cdn.jsdelivr.net/gh/Shadowairing/MyBlog_Data_Custom_00000@master/Openwrt/OpenWrt-Pi4B-first/OpenWrt-Pi-X64_with_unblockmusic/OpenWrt-Pi-X64_1.0.1_with_unblockmusic.part02.rar" target="_blank" rel="noopener">PART 02</a></p>
+<p><a href="https://cdn.jsdelivr.net/gh/Shadowairing/MyBlog_Data_Custom_00000@master/Openwrt/OpenWrt-Pi4B-first/OpenWrt-Pi-X64_with_unblockmusic/OpenWrt-Pi-X64_1.0.1_with_unblockmusic.part03.rar" target="_blank" rel="noopener">PART 03</a></p>
+<h5 id="不带-解锁网易云灰色歌曲-功能的"><a href="#不带-解锁网易云灰色歌曲-功能的" class="headerlink" title="不带  解锁网易云灰色歌曲 功能的"></a>不带  <code>解锁网易云灰色歌曲</code> 功能的</h5><p><a href="https://cdn.jsdelivr.net/gh/Shadowairing/MyBlog_Data_Custom_00000@master/Openwrt/OpenWrt-Pi4B-first/OpenWrt-Pi-X64_without_unblockmusic/OpenWrt-Pi-X64_1.0.1_without_unblockmusic.part01.rar" target="_blank" rel="noopener">PART 01</a></p>
+<p><a href="https://cdn.jsdelivr.net/gh/Shadowairing/MyBlog_Data_Custom_00000@master/Openwrt/OpenWrt-Pi4B-first/OpenWrt-Pi-X64_without_unblockmusic/OpenWrt-Pi-X64_1.0.1_without_unblockmusic.part02.rar" target="_blank" rel="noopener">PART 02</a></p>
+<p><a href="https://cdn.jsdelivr.net/gh/Shadowairing/MyBlog_Data_Custom_00000@master/Openwrt/OpenWrt-Pi4B-first/OpenWrt-Pi-X64_without_unblockmusic/OpenWrt-Pi-X64_1.0.1_without_unblockmusic.part03.rar" target="_blank" rel="noopener">PART 03</a></p>
+<h5 id="不带-解锁网易云灰色歌曲-和-SSR-PLUS-功能，添加了-SSR-Python-Server-功能"><a href="#不带-解锁网易云灰色歌曲-和-SSR-PLUS-功能，添加了-SSR-Python-Server-功能" class="headerlink" title="不带  解锁网易云灰色歌曲 和  SSR PLUS 功能，添加了  SSR Python Server 功能"></a>不带  <code>解锁网易云灰色歌曲</code> 和  <code>SSR PLUS</code> 功能，添加了  <code>SSR Python Server</code> 功能</h5><p><a href="https://cdn.jsdelivr.net/gh/Shadowairing/MyBlog_Data_Custom_00000@master/Openwrt/OpenWrt-Pi4B-first/OpenWrt-Pi-X64_without_unblockmusic_or_ssrplus/OpenWrt-Pi-X64_1.0.1_without_unblockmusic_or_ssrplus.part01.rar" target="_blank" rel="noopener">PART 01</a></p>
+<p><a href="https://cdn.jsdelivr.net/gh/Shadowairing/MyBlog_Data_Custom_00000@master/Openwrt/OpenWrt-Pi4B-first/OpenWrt-Pi-X64_without_unblockmusic_or_ssrplus/OpenWrt-Pi-X64_1.0.1_without_unblockmusic_or_ssrplus.part02.rar" target="_blank" rel="noopener">PART 02</a></p>
+<p><a href="https://cdn.jsdelivr.net/gh/Shadowairing/MyBlog_Data_Custom_00000@master/Openwrt/OpenWrt-Pi4B-first/OpenWrt-Pi-X64_without_unblockmusic_or_ssrplus/OpenWrt-Pi-X64_1.0.1_without_unblockmusic_or_ssrplus.part03.rar" target="_blank" rel="noopener">PART 03</a></p>
+<h1 id="Enjoy"><a href="#Enjoy" class="headerlink" title="Enjoy~"></a>Enjoy~</h1><hr>
+<font size="6" color="green"><i>2020年2月11日更新：</i></font>
+
+<p>更新了<code>树莓派4B</code>和<code>X86-64</code>两个版本，都是服务端专用版，只保留了<code>VPN，FRP</code>等功能，没有ddns</p>
+<font size="5" color="orange">Openwrt For Raspberry Pi 4B</font>
+
+<p><a href="https://cdn.jsdelivr.net/gh/Shadowairing/MyBlog_Data_Custom_00000@master/Openwrt/2020_2_11/OpenWrt-Pi4B/openwrt-brcm2708-bcm2711-rpi-4-ext4-sysupgrade.part01.rar" target="_blank" rel="noopener">PART 01</a></p>
+<p><a href="https://cdn.jsdelivr.net/gh/Shadowairing/MyBlog_Data_Custom_00000@master/Openwrt/2020_2_11/OpenWrt-Pi4B/openwrt-brcm2708-bcm2711-rpi-4-ext4-sysupgrade.part02.rar" target="_blank" rel="noopener">PART 02</a></p>
+<font size="5" color="orange">Openwrt For X86-64</font>
+
+<p><a href="https://cdn.jsdelivr.net/gh/Shadowairing/MyBlog_Data_Custom_00000@master/Openwrt/2020_2_11/OpenWrt-X86-64/openwrt-x86-64-combined-squashfs.part01.rar" target="_blank" rel="noopener">PART 01</a></p>
+<p><a href="https://cdn.jsdelivr.net/gh/Shadowairing/MyBlog_Data_Custom_00000@master/Openwrt/2020_2_11/OpenWrt-X86-64/openwrt-x86-64-combined-squashfs.part02.rar" target="_blank" rel="noopener">PART 02</a></p>
+<hr>
+<font size="6" color="green"><i>2020年2月17日更新：</i></font>
+
+<p>更新了<code>树莓派4B</code>和<code>X86-64</code>两个版本，增加了<code>阿里DDNS客户端，Dnspod，ServerChan微信推送，Adbyby Plus+</code>等功能</p>
+<font size="5" color="orange">Openwrt For Raspberry Pi 4B</font>
+
+<p><a href="https://cdn.jsdelivr.net/gh/Shadowairing/MyBlog_Data_Custom_00000@master/Openwrt/2020_2_17/OpenWrt-Pi4B/openwrt-bcm27xx-bcm2711-rpi-4-ext4-sysupgrade.part01.rar" target="_blank" rel="noopener">PART 01</a></p>
+<p><a href="https://cdn.jsdelivr.net/gh/Shadowairing/MyBlog_Data_Custom_00000@master/Openwrt/2020_2_17/OpenWrt-Pi4B/openwrt-bcm27xx-bcm2711-rpi-4-ext4-sysupgrade.part02.rar" target="_blank" rel="noopener">PART 02</a></p>
+<font size="5" color="orange">Openwrt For X86-64</font>
+
+<p><a href="https://cdn.jsdelivr.net/gh/Shadowairing/MyBlog_Data_Custom_00000@master/Openwrt/2020_2_17/OpenWrt-X86-64/openwrt-x86-64-combined-squashfs.part01.rar" target="_blank" rel="noopener">PART 01</a></p>
+<p><a href="https://cdn.jsdelivr.net/gh/Shadowairing/MyBlog_Data_Custom_00000@master/Openwrt/2020_2_17/OpenWrt-X86-64/openwrt-x86-64-combined-squashfs.part02.rar" target="_blank" rel="noopener">PART 02</a></p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Infinity
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://www.sstkayr.com/2019/10/20/OpenWrt-编译教程/" title="OpenWrt 编译教程">https://www.sstkayr.com/2019/10/20/OpenWrt-编译教程/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+	  <div>
+		
+		<div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">------ 结界 ------</div>
+    
+</div>
+		
+	  </div>
+	  
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/Linux/" rel="tag"><i class="fa fa-tag"></i> Linux</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2019/10/17/树莓派4B使用教程/" rel="prev" title="树莓派4B使用教程">
+      <i class="fa fa-chevron-left"></i> 树莓派4B使用教程
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2019/10/23/Manjaro安装配置教程/" rel="next" title="Manjaro安装配置教程">
+      Manjaro安装配置教程 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#第一部分：翻车"><span class="nav-number">1.</span> <span class="nav-text">第一部分：翻车</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#第一步，布置环境"><span class="nav-number">1.1.</span> <span class="nav-text">第一步，布置环境</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#第一步：安装-VMware-Workstation-Pro"><span class="nav-number">1.1.1.</span> <span class="nav-text">第一步：安装 VMware Workstation Pro</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第二步：下载ubuntu-18-04-3-desktop-amd64-iso"><span class="nav-number">1.1.2.</span> <span class="nav-text">第二步：下载ubuntu-18.04.3-desktop-amd64.iso</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第三步：将下载的-ubuntu-18-04-3-desktop-amd64-iso-安装到-VMware-Workstation-中"><span class="nav-number">1.1.3.</span> <span class="nav-text">第三步：将下载的 ubuntu-18.04.3-desktop-amd64.iso 安装到 VMware Workstation 中</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第四步，如果你不是快速安装，那么请你自行安装-VMware-Tools"><span class="nav-number">1.1.4.</span> <span class="nav-text">第四步，如果你不是快速安装，那么请你自行安装 VMware Tools</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第二步，开始编译"><span class="nav-number">1.2.</span> <span class="nav-text">第二步，开始编译</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#第一步：命令行输入-sudo-apt-get-update-，然后输入"><span class="nav-number">1.2.1.</span> <span class="nav-text">第一步：命令行输入 sudo apt-get update ，然后输入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第二步，执行git-clone"><span class="nav-number">1.2.2.</span> <span class="nav-text">第二步，执行git clone</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第三步，进入-lede-子目录"><span class="nav-number">1.2.3.</span> <span class="nav-text">第三步，进入 lede 子目录</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#附加步骤："><span class="nav-number">1.2.3.1.</span> <span class="nav-text">附加步骤：</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#编译前下载好-DL包-，可大量缩减首次编译时间；使用-涡轮增雕法-，可把大雕删除的软件打包回去编译"><span class="nav-number">1.2.3.1.1.</span> <span class="nav-text">编译前下载好 DL包 ，可大量缩减首次编译时间；使用 涡轮增雕法 ，可把大雕删除的软件打包回去编译</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#DL包使用方法：dl-tgz-放进-home-mj-目录，解压，执行以下命令"><span class="nav-number">1.2.3.1.1.1.</span> <span class="nav-text">DL包使用方法：dl.tgz 放进 /home/mj/ 目录，解压，执行以下命令</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#涡轮增雕法使用方法：diy-tgz-放进-home-mj-目录，解压，执行以下命令"><span class="nav-number">1.2.3.1.1.2.</span> <span class="nav-text">涡轮增雕法使用方法：diy.tgz 放进 /home/mj/ 目录，解压，执行以下命令</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#下载链接"><span class="nav-number">1.2.3.1.1.3.</span> <span class="nav-text">下载链接</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第四步，更新-FEEDS"><span class="nav-number">1.2.4.</span> <span class="nav-text">第四步，更新 FEEDS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第五步，执行-make-menuconfig，选择编译的参数"><span class="nav-number">1.2.5.</span> <span class="nav-text">第五步，执行 make menuconfig，选择编译的参数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#基本三步走"><span class="nav-number">1.2.5.1.</span> <span class="nav-text">基本三步走</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#第一步，首先先去-Target-System-选择你的-CPU架构"><span class="nav-number">1.2.5.1.1.</span> <span class="nav-text">第一步，首先先去 Target System 选择你的 CPU架构</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#我选择的是-BCM2711-boards-64-bit"><span class="nav-number">1.2.5.1.1.1.</span> <span class="nav-text">我选择的是 BCM2711 boards (64 bit)</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#第二步，其次去-Subtarget-选择你的-CPU型号"><span class="nav-number">1.2.5.1.2.</span> <span class="nav-text">第二步，其次去 Subtarget 选择你的 CPU型号</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#我选择的是-Subtarget-BCM2711-boards-64-bit"><span class="nav-number">1.2.5.1.2.1.</span> <span class="nav-text">我选择的是 Subtarget (BCM2711 boards (64 bit))</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#第三步，最后去-Target-Profile选择你的-机器型号"><span class="nav-number">1.2.5.1.3.</span> <span class="nav-text">第三步，最后去 Target Profile选择你的 机器型号</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#我选择的是-Target-Profile-Raspberry-Pi-4B"><span class="nav-number">1.2.5.1.3.1.</span> <span class="nav-text">我选择的是 Target Profile (Raspberry Pi 4B)</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#接下来是详细的设置"><span class="nav-number">1.2.5.2.</span> <span class="nav-text">接下来是详细的设置</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#第一步，调整Target-Images-gt-Kernel-partition-size-in-MB-的大小，我一口气给他设置了-128-MB"><span class="nav-number">1.2.5.2.1.</span> <span class="nav-text">第一步，调整Target Images &gt; Kernel partition size (in MB)的大小，我一口气给他设置了 128 MB</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#第二步，调整Target-Images-gt-Root-filesystem-partition-size-in-MB-的大小，我又一口气给他设置了-512-MB"><span class="nav-number">1.2.5.2.2.</span> <span class="nav-text">第二步，调整Target Images &gt; Root filesystem partition size (in MB)的大小，我又一口气给他设置了 512 MB</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#第三步，进入-gt-LuCI-gt-1-Collections-，选择一个你想要的界面"><span class="nav-number">1.2.5.2.3.</span> <span class="nav-text">第三步，进入 &gt; LuCI &gt; 1. Collections ，选择一个你想要的界面</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#第四步，进入-gt-LuCI-gt-2-Modules-gt-Translations-，选择你的语言"><span class="nav-number">1.2.5.2.4.</span> <span class="nav-text">第四步，进入 &gt; LuCI &gt; 2. Modules &gt; Translations ，选择你的语言</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#第五步，进入-gt-LuCI-gt-4-Themes-，选择你想编译进去的主题"><span class="nav-number">1.2.5.2.5.</span> <span class="nav-text">第五步，进入 &gt; LuCI &gt; 4. Themes ，选择你想编译进去的主题</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#第六步，进入-gt-LuCI-gt-3-Applications-，选择你需要编译进去的应用"><span class="nav-number">1.2.5.2.6.</span> <span class="nav-text">第六步，进入 &gt; LuCI &gt; 3. Applications ，选择你需要编译进去的应用</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#第七步，进入-gt-Kernel-modules-去选择你想支持的-Filesystems-USB-Support-等等驱动，比如说："><span class="nav-number">1.2.5.2.7.</span> <span class="nav-text">第七步，进入 &gt; Kernel modules 去选择你想支持的 Filesystems ,  USB Support 等等驱动，比如说：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#第七步，都选择好之后，保存退出，他的配置文件名字是-config-，别改名字"><span class="nav-number">1.2.5.2.8.</span> <span class="nav-text">第七步，都选择好之后，保存退出，他的配置文件名字是 .config ，别改名字</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#开始编译"><span class="nav-number">1.2.6.</span> <span class="nav-text">开始编译</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#选择好你的路由之后，输入下面的命令（-j1-后面是线程数。第一次编译推荐用单线程，国内请尽量全局科学上网）即可开始编译你要的固件了。"><span class="nav-number">1.2.6.1.</span> <span class="nav-text">选择好你的路由之后，输入下面的命令（-j1 后面是线程数。第一次编译推荐用单线程，国内请尽量全局科学上网）即可开始编译你要的固件了。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#等待数小时就编译成功了。"><span class="nav-number">1.2.6.2.</span> <span class="nav-text">等待数小时就编译成功了。</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#以后二次编译："><span class="nav-number">1.2.7.</span> <span class="nav-text">以后二次编译：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第三步，失败了"><span class="nav-number">1.3.</span> <span class="nav-text">第三步，失败了~</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第四步，移植"><span class="nav-number">1.4.</span> <span class="nav-text">第四步，移植</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#翻车了翻车了，不要问为什么，问就是翻车了"><span class="nav-number">1.5.</span> <span class="nav-text">翻车了翻车了，不要问为什么，问就是翻车了</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#第二部分，翻车又给翻回来了"><span class="nav-number">2.</span> <span class="nav-text">第二部分，翻车又给翻回来了</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#山重水复疑无路，柳暗花明又一村"><span class="nav-number">2.1.</span> <span class="nav-text">山重水复疑无路，柳暗花明又一村</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#正在我打算放弃的时候，竟然发现-Lean-的固件又让我给编译成功了。。"><span class="nav-number">2.1.1.</span> <span class="nav-text">正在我打算放弃的时候，竟然发现  Lean 的固件又让我给编译成功了。。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#话不多说，下面开始教程"><span class="nav-number">2.1.2.</span> <span class="nav-text">话不多说，下面开始教程</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第一步，布置环境-1"><span class="nav-number">2.2.</span> <span class="nav-text">第一步，布置环境</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#第一步：安装-VMware-Workstation-Pro-1"><span class="nav-number">2.2.1.</span> <span class="nav-text">第一步：安装 VMware Workstation Pro</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第二步：下载ubuntu-18-04-3-desktop-amd64-iso-1"><span class="nav-number">2.2.2.</span> <span class="nav-text">第二步：下载ubuntu-18.04.3-desktop-amd64.iso</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第三步：将下载的-ubuntu-18-04-3-desktop-amd64-iso-安装到-VMware-Workstation-中-1"><span class="nav-number">2.2.3.</span> <span class="nav-text">第三步：将下载的 ubuntu-18.04.3-desktop-amd64.iso 安装到 VMware Workstation 中</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第四步，如果你不是快速安装，那么请你自行安装-VMware-Tools-1"><span class="nav-number">2.2.4.</span> <span class="nav-text">第四步，如果你不是快速安装，那么请你自行安装 VMware Tools</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第二步，开始编译-1"><span class="nav-number">2.3.</span> <span class="nav-text">第二步，开始编译</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#第一步：命令行输入-sudo-apt-get-update-，然后输入-1"><span class="nav-number">2.3.1.</span> <span class="nav-text">第一步：命令行输入 sudo apt-get update ，然后输入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第二步，执行git-clone-1"><span class="nav-number">2.3.2.</span> <span class="nav-text">第二步，执行git clone</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第三步，进入-lede-子目录-1"><span class="nav-number">2.3.3.</span> <span class="nav-text">第三步，进入 lede 子目录</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#附加步骤：-1"><span class="nav-number">2.3.3.1.</span> <span class="nav-text">附加步骤：</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#编译前下载好-DL包-，可大量缩减首次编译时间；使用-涡轮增雕法-，可把大雕删除的软件打包回去编译-1"><span class="nav-number">2.3.3.1.1.</span> <span class="nav-text">编译前下载好 DL包 ，可大量缩减首次编译时间；使用 涡轮增雕法 ，可把大雕删除的软件打包回去编译</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#DL包使用方法：dl-tgz-放进-home-mj-目录，解压，执行以下命令-1"><span class="nav-number">2.3.3.1.1.1.</span> <span class="nav-text">DL包使用方法：dl.tgz 放进 /home/mj/ 目录，解压，执行以下命令</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#涡轮增雕法使用方法：diy-tgz-放进-home-mj-目录，解压，执行以下命令-1"><span class="nav-number">2.3.3.1.1.2.</span> <span class="nav-text">涡轮增雕法使用方法：diy.tgz 放进 /home/mj/ 目录，解压，执行以下命令</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#下载链接-1"><span class="nav-number">2.3.3.1.1.3.</span> <span class="nav-text">下载链接</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第四步（可选），自定义要安装的包"><span class="nav-number">2.3.4.</span> <span class="nav-text">第四步（可选），自定义要安装的包</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第五步，更新-FEEDS"><span class="nav-number">2.3.5.</span> <span class="nav-text">第五步，更新 FEEDS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第六步，执行-make-menuconfig，选择编译的参数"><span class="nav-number">2.3.6.</span> <span class="nav-text">第六步，执行 make menuconfig，选择编译的参数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#基本三步走-1"><span class="nav-number">2.3.6.1.</span> <span class="nav-text">基本三步走</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#第一步，首先先去-Target-System-选择你的-CPU架构-1"><span class="nav-number">2.3.6.1.1.</span> <span class="nav-text">第一步，首先先去 Target System 选择你的 CPU架构</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#我选择的是-BCM2711-boards-64-bit-1"><span class="nav-number">2.3.6.1.1.1.</span> <span class="nav-text">我选择的是 BCM2711 boards (64 bit)</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#第二步，其次去-Subtarget-选择你的-CPU型号-1"><span class="nav-number">2.3.6.1.2.</span> <span class="nav-text">第二步，其次去 Subtarget 选择你的 CPU型号</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#我选择的是-Subtarget-BCM2711-boards-64-bit-1"><span class="nav-number">2.3.6.1.2.1.</span> <span class="nav-text">我选择的是 Subtarget (BCM2711 boards (64 bit))</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#第三步，最后去-Target-Profile选择你的-机器型号-1"><span class="nav-number">2.3.6.1.3.</span> <span class="nav-text">第三步，最后去 Target Profile选择你的 机器型号</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#我选择的是-Target-Profile-Raspberry-Pi-4B-1"><span class="nav-number">2.3.6.1.3.1.</span> <span class="nav-text">我选择的是 Target Profile (Raspberry Pi 4B)</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#接下来是详细的设置-1"><span class="nav-number">2.3.6.2.</span> <span class="nav-text">接下来是详细的设置</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#第一步，调整Target-Images-gt-Kernel-partition-size-in-MB-的大小，我一口气给他设置了-128-MB-1"><span class="nav-number">2.3.6.2.1.</span> <span class="nav-text">第一步，调整Target Images &gt; Kernel partition size (in MB)的大小，我一口气给他设置了 128 MB</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#第二步，调整Target-Images-gt-Root-filesystem-partition-size-in-MB-的大小，我又一口气给他设置了-512-MB-1"><span class="nav-number">2.3.6.2.2.</span> <span class="nav-text">第二步，调整Target Images &gt; Root filesystem partition size (in MB)的大小，我又一口气给他设置了 512 MB</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#第三步，进入-gt-LuCI-gt-1-Collections-，选择一个你想要的界面-1"><span class="nav-number">2.3.6.2.3.</span> <span class="nav-text">第三步，进入 &gt; LuCI &gt; 1. Collections ，选择一个你想要的界面</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#第四步，进入-gt-LuCI-gt-2-Modules-gt-Translations-，选择你的语言-1"><span class="nav-number">2.3.6.2.4.</span> <span class="nav-text">第四步，进入 &gt; LuCI &gt; 2. Modules &gt; Translations ，选择你的语言</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#第五步，进入-gt-LuCI-gt-4-Themes-，选择你想编译进去的主题-1"><span class="nav-number">2.3.6.2.5.</span> <span class="nav-text">第五步，进入 &gt; LuCI &gt; 4. Themes ，选择你想编译进去的主题</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#第六步，进入-gt-LuCI-gt-3-Applications-，选择你需要编译进去的应用-1"><span class="nav-number">2.3.6.2.6.</span> <span class="nav-text">第六步，进入 &gt; LuCI &gt; 3. Applications ，选择你需要编译进去的应用</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#第七步，进入-gt-Kernel-modules-去选择你想支持的-Filesystems-USB-Support-等等驱动，比如说：-1"><span class="nav-number">2.3.6.2.7.</span> <span class="nav-text">第七步，进入 &gt; Kernel modules 去选择你想支持的 Filesystems ,  USB Support 等等驱动，比如说：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第七步，都选择好之后，保存退出，他的配置文件名字是-config-，别改名字-1"><span class="nav-number">2.3.7.</span> <span class="nav-text">第七步，都选择好之后，保存退出，他的配置文件名字是 .config ，别改名字</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#最后，开始编译"><span class="nav-number">2.3.8.</span> <span class="nav-text">最后，开始编译</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#选择好你的路由之后，输入下面的命令（-j1-后面是线程数。第一次编译推荐用单线程，国内请尽量全局科学上网）即可开始编译你要的固件了。-1"><span class="nav-number">2.3.8.1.</span> <span class="nav-text">选择好你的路由之后，输入下面的命令（-j1 后面是线程数。第一次编译推荐用单线程，国内请尽量全局科学上网）即可开始编译你要的固件了。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#等待数小时就编译成功了。-1"><span class="nav-number">2.3.8.2.</span> <span class="nav-text">等待数小时就编译成功了。</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#以后二次编译：-1"><span class="nav-number">2.3.9.</span> <span class="nav-text">以后二次编译：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#制作成功之后，推荐使用-Rufus-工具刷入"><span class="nav-number">2.4.</span> <span class="nav-text">制作成功之后，推荐使用 Rufus 工具刷入</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#教程结束"><span class="nav-number">2.5.</span> <span class="nav-text">教程结束</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#已知-BUG"><span class="nav-number">2.5.1.</span> <span class="nav-text">已知 BUG</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#说明"><span class="nav-number">2.5.2.</span> <span class="nav-text">说明</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#USB有线网卡我用的是-AX88179"><span class="nav-number">2.5.2.1.</span> <span class="nav-text">USB有线网卡我用的是 AX88179</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#USB无线网卡我用的是-3070"><span class="nav-number">2.5.2.2.</span> <span class="nav-text">USB无线网卡我用的是 3070</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#其他网卡驱动我可能也编译进去了，请自行测试"><span class="nav-number">2.5.2.3.</span> <span class="nav-text">其他网卡驱动我可能也编译进去了，请自行测试~~</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#如果刷入无法登录192-168-1-1，请自己设置固定ip"><span class="nav-number">2.5.2.4.</span> <span class="nav-text">如果刷入无法登录192.168.1.1，请自己设置固定ip</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#下载链接在下方，有几个部分组成的分段压缩包，把所有压缩包下载下来一起解压，SSH-功能默认开启，如需关闭请自行设置"><span class="nav-number">2.5.3.</span> <span class="nav-text">下载链接在下方，有几个部分组成的分段压缩包，把所有压缩包下载下来一起解压，SSH 功能默认开启，如需关闭请自行设置</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#提供几个版本："><span class="nav-number">2.5.3.1.</span> <span class="nav-text">提供几个版本：</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#带-解锁网易云灰色歌曲-功能的"><span class="nav-number">2.5.3.1.1.</span> <span class="nav-text">带 解锁网易云灰色歌曲 功能的</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#不带-解锁网易云灰色歌曲-功能的"><span class="nav-number">2.5.3.1.2.</span> <span class="nav-text">不带  解锁网易云灰色歌曲 功能的</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#不带-解锁网易云灰色歌曲-和-SSR-PLUS-功能，添加了-SSR-Python-Server-功能"><span class="nav-number">2.5.3.1.3.</span> <span class="nav-text">不带  解锁网易云灰色歌曲 和  SSR PLUS 功能，添加了  SSR Python Server 功能</span></a></li></ol></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Enjoy"><span class="nav-number">3.</span> <span class="nav-text">Enjoy~</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  
+   <a href="/">
+    <img class="site-author-image" itemprop="image" alt="Infinity"
+      src="/images/avatar.png">
+   </a>
+  <p class="site-author-name" itemprop="name">Infinity</p>
+  <div class="site-description" itemprop="description">Stars are only visible in darkness.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">36</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">太极</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">126k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">1:55</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script size="300" alpha="0.6" zIndex="-1" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/pisces.js"></script>
+<script src="/js/next-boot.js"></script>
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.getAttribute('pjax') !== null) {
+      script.setAttribute('pjax', '');
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+  
+<!-- calendar widget -->
+
+    <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-calendar/calendar.min.js"></script>
+    <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-calendar/languages.min.js"></script>
+    <script type="text/javascript">
+    $(function() {
+        $('#CloudCalendar').aCalendar('zh-CN',
+            $.extend(
+                '', {
+                    single:true,
+                    root:'/calendar/'
+                }
+            )
+        );
+    });
+    </script>
+
+
+    </div>
+  <script src="https://cdn.jsdelivr.net/gh/Shadowairing/MyBlog_MISC/Live2d-Widget_Custom/Live2d-Widget_Custom_0000/autoload.js"></script>
+</body>
+</html>

@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('https://www.sstkayr.com').hostname,
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.7.1',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":false,"style":"mac"},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="在你看这篇文章之前建议先阅读本博客内的 “什么是动态规划？(科普) “ 这篇文章，对动态规划有一个了解。">
+<meta name="keywords" content="Dynamic Programming">
+<meta property="og:type" content="article">
+<meta property="og:title" content="动态规划之01背包详解">
+<meta property="og:url" content="https://www.sstkayr.com/2019/08/14/动态规划之01背包详解/index.html">
+<meta property="og:site_name" content="太极">
+<meta property="og:description" content="在你看这篇文章之前建议先阅读本博客内的 “什么是动态规划？(科普) “ 这篇文章，对动态规划有一个了解。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-10-10T07:07:36.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="动态规划之01背包详解">
+<meta name="twitter:description" content="在你看这篇文章之前建议先阅读本博客内的 “什么是动态规划？(科普) “ 这篇文章，对动态规划有一个了解。">
+
+<link rel="canonical" href="https://www.sstkayr.com/2019/08/14/动态规划之01背包详解/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>动态规划之01背包详解 | 太极</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">太极</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">宇宙之浩瀚 万物之无穷</p>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签<span class="badge">11</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类<span class="badge">5</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">36</span></a>
+
+  </li>
+        <li class="menu-item menu-item-schedule">
+
+    <a href="/schedule/" rel="section"><i class="fa fa-fw fa-calendar"></i>日程表</a>
+
+  </li>
+        <li class="menu-item menu-item-links">
+
+    <a href="/links/" rel="section"><i class="fa fa-fw fa-link"></i>链接</a>
+
+  </li>
+        <li class="menu-item menu-item-message-board">
+
+    <a href="/message-board/" rel="section"><i class="fa fa-fw fa-bookmark-o"></i>留言板</a>
+
+  </li>
+        <li class="menu-item menu-item-taichi-music-player">
+
+    <a href="https://music.sstkayr.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-music"></i>太极音乐播放器</a>
+
+  </li>
+        <li class="menu-item menu-item-taichi-zone">
+
+    <a href="https://tizone.sstkayr.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-compass"></i>太极空间</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+	
+	<script>
+		document.addEventListener("visibilitychange", function () {
+        if (document.hidden) {
+            document.title="乾坤";
+			} 
+		else{
+			document.title="☯";
+			setTimeout(function(){
+				document.title="太极";
+				}, 1200);
+			}
+		}, false);
+	</script>
+	
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.sstkayr.com/2019/08/14/动态规划之01背包详解/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Infinity">
+      <meta itemprop="description" content="Stars are only visible in darkness.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="太极">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          动态规划之01背包详解
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-08-14 21:59:39" itemprop="dateCreated datePublished" datetime="2019-08-14T21:59:39+08:00">2019-08-14</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-10-10 15:07:36" itemprop="dateModified" datetime="2019-10-10T15:07:36+08:00">2019-10-10</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Information-Technology/" itemprop="url" rel="index">
+                    <span itemprop="name">Information Technology</span>
+                  </a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Information-Technology/Algorithm/" itemprop="url" rel="index">
+                    <span itemprop="name">Algorithm</span>
+                  </a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>2.6k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>2 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>在你看这篇文章之前建议先阅读本博客内的 “什么是动态规划？(科普) “ 这篇文章，对动态规划有一个了解。<br><a id="more"></a><br>先看问题:</p>
+<p>有n件物品和一个容量为w的背包。（每种物品均只有一件）第i件物品的占用空间(cost)是c[i]，价值(value)是v[i]。求解将哪些物品装入背包可使价值总和最大。</p>
+<p>通过阅读问题，可以知道一件物品就是有<font color="red">放或不放</font>两种情况，那么怎么才能判断当前物品该不该放进去从而使<font color="red">利益最大化</font>呢。</p>
+<hr>
+<p>先分析一下，比如说总共有10件物品，包的容量是8。</p>
+<p>你既然想要”求解将哪些物品装入背包可使价值总和最大“，所以说你需要知道在”<font color="red">当前物品下并且当前剩余空间下</font>“的最大价值。</p>
+<p>而”<font color="red">当前物品下并且当前剩余空间下的最大价值</font>“又取决于什么呢？</p>
+<p>举个例子，对于第9件物品来说，他的最大价值该如何求呢？</p>
+<p>比如说，对于第9件物品，剩余空间为6的背包无非就是2种操作：<font color="red">放，不放</font></p>
+<p>那到底该什么时候放，什么时候不放呢？我们假设”第9件物品”的占用空间是3</p>
+<p>①如果不放，那”<font color="red">第9件物品并且剩余空间为6时</font>“的价值就是”<font color="red">第8件物品并且剩余空间为6的背包的价值</font>“那么多咯(继承上一个物品该容量的最大价值)</p>
+<p>②如果放，那”<font color="red">第9件物品并且剩余空间为6时</font>“的价值就是”<font color="red">第8件物品并且剩余空间为6-3=3时候的最大价值</font>“再加上”第9件物品的价值”那么多了</p>
+<p>很显然咯，”<font color="red">第9件物品并且剩余空间为6时</font>“的<font color="red">最大价值=max(①,②)</font></p>
+<p>好，我们现在不妨<font color="red">倒着</font>思考，取第10件物品的时候的最大价值，是max(取的价值,不取的价值)的值</p>
+<p>①如果取当前物品的话，那么取之后的价值=”[剩余空间-消耗空间]的价值+当前物品价值”</p>
+<p>②如果不取当前物品的话，那么取之后的价值=”继承上一个容量的价值”</p>
+<p>也许你会问，第②步既然不取，那又怎么会是取之后的价值了呢？</p>
+<p>哈哈，当然可以取0件~<br>OK,我们倒着思考，很明显，这是一个递归，balabala…..</p>
+<hr>
+<p>好了，现在把思路正过来，从头往后去思考。</p>
+<p>首先，我们用i代表前i件物品，w(weight)代表包的最大承重，c<a href="cost">i</a>是第i件物品消耗的空间、v<a href="value">i</a>是第i件物品的价值、f[i,j]是最大价值(i个物品放入有j个剩余空间的包)。</p>
+<p>首先需要明确一点：<font color="red"><u>当前物品放不放是由上一个物品递推出来的</u></font></p>
+<font size="5" color="blue">第一种情况：第i件不放进去，这时所得价值(f[i][j])为:f[i][j]=f[i-1][w]</font>
+
+<p>因为不放进去，所以就继承f[i-1][w]，即<font color="red">f[i][j]=f[i-1][w]</font></p>
+<font size="5" color="blue">另一种情况：第i件放进去，这时所得价值为:f[i][j]=f[i-1][w-c[i]]+v[i]</font>
+
+<p>因为放进去了，所以说你现在需要继承前<code>i-1</code>个物品占用体积为<code>w-c[i]</code>时的价值并加上当前物品价值v[i]</p>
+<p>即<font color="red">f[i][j]=f[i-1][w-c[i]]+v[i]</font></p>
+<p>因为对于第i件物品就是这两种操作，而你又想要最大价值，所以</p>
+<center><font size="6" color="red">f[i][j]=max(f[i-1][w],f[i-1][w-c[i]]+v[i])</font></center>
+
+<p>该代码：(n为物品数量)</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; ++i)&#123;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> j = w; j &gt;= <span class="number">0</span>; --j) &#123;</span><br><span class="line">    <span class="keyword">if</span> (c[i] &lt;= j)<span class="comment">//如果当前物品可以放入当前空间的背包</span></span><br><span class="line">      f[i][j] = max(f[i - <span class="number">1</span>][j], f[i - <span class="number">1</span>][j - w[i]] + v[i])</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">      f[i][j] = f[i - <span class="number">1</span>][j];<span class="comment">//如果当前物品放不进去，那么继承前i个物品在当前空间大小时的价值</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当n=3，v=6时的表格：</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>i\j</th>
+<th>j=0</th>
+<th>j=1</th>
+<th>j=2</th>
+<th>j=3</th>
+<th>j=4</th>
+<th>j=5</th>
+<th>j=6</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>i=0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>i=1</td>
+<td>0</td>
+<td><font color="red">(6)</font>0</td>
+<td><font color="red">(5)</font>7</td>
+<td><font color="red">(4)</font>7</td>
+<td><font color="red">(3)</font>7</td>
+<td><font color="red">(2)</font>7</td>
+<td><font color="red">(1)</font>7</td>
+</tr>
+<tr>
+<td>i=2</td>
+<td>0</td>
+<td><font color="red">(12)</font>0</td>
+<td><font color="red">(11)</font>7</td>
+<td><font color="red">(10)</font>7</td>
+<td><font color="red">(9)</font>7</td>
+<td><font color="red">(8)</font>8</td>
+<td><font color="red">(7)</font>8</td>
+</tr>
+<tr>
+<td>i=3</td>
+<td>0</td>
+<td><font color="red">(18)</font>0</td>
+<td><font color="red">(17)</font>7</td>
+<td><font color="red">(16)</font>7</td>
+<td><font color="red">(15)</font>7</td>
+<td><font color="red">(14)</font>8</td>
+<td><font color="red">(13)</font>8</td>
+</tr>
+</tbody>
+</table>
+</div>
+<font size="5" color="blue">以上是用二维数组存储的，其实还可以用一维数组存储进行空间优化(滚动数组)</font>
+
+<font color="red">从上面计算f[i][j]可以看出，在计算f[i][j]时只使用了f[i-1][0……j]，所以说并没有使用其他子问题，所以说在存储子问题解的时候，只用存储f[i-1]的子问题解即可；所以说可以用一个一维数组替换掉那个二维数组，一个存储需要用到的子问题，一个存储正在解决的子问题。</font>
+
+<center><font size="4" color="GREEN">我们用f[v]表示当前状态是容量为v的背包所得价值</font></center>
+
+<p>那滚动数组应当如何滚动呢，用二维数组计算f[i][j]时只使用了f[i-1][0……j]，而并没有使用到f[i-1][j+1]，所以在计算j的循环的时候，让j=M……1</p>
+<font color="orange">这个时候你也许会问，那你上面用的二维数组不也是逆序吗，其实对于二维数组的来说，正逆序无所谓，当你懂得01背包的算法之后就可以明白这一点</font>
+
+<p>下面给出一维数组优化过的代码：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; ++i)&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> j = w; j &gt;= <span class="number">0</span>; --j) &#123;</span><br><span class="line">      <span class="keyword">if</span> (c[i] &lt;= j)</span><br><span class="line">        f[j] = max(f[j], f[j - w[i]] + v[i]);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果你二维的理解了，一维的就自然会懂了。</p>
+<hr>
+<p>关于恰好装满的问题：</p>
+<p>对于<font color="red"><u>2维数组</u></font>来说，解决方法：在初始化时除了f[0][0]为0其它f[0][1..V]均设为-∞，这样就可以保证最终得到的f[n][v]是一种恰好装满背包的最优解。</p>
+<p><font color="red">解释</font>：恰好装满，我们在转移状态的时候，需保留上一层需要参考的状态才能实现转移。所以只有上一层是恰好装满的状态，才可以保证这次也是恰好装满(只有上一个满了，这个才满，根据上一个来的)。之所以在f[0][0]的时候才是0，因为占用空间为0的物品可以恰好装满容量为0的背包。所以也就是说f[0][1..V]都不满足恰好装满的条件</p>
+<p>之所以f[0][1..V]均设为-∞，是因为若上一个背包是-∞那么再加weight仍是-∞，所以就可以之保留装满的状态了。</p>
+<p>所以若f[n][v]是-∞,则没有能装满的情况。</p>
+<hr>
+<p>对于<font color="red"><u>1维数组</u></font>来说，解决方法：在初始化时除了f[0]为0其它f[1..V]均设为-∞，这样就可以保证最终得到的f[n]是一种恰好装满背包的最优解。</p>
+<p><font color="red">解释</font>：同上</p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Infinity
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://www.sstkayr.com/2019/08/14/动态规划之01背包详解/" title="动态规划之01背包详解">https://www.sstkayr.com/2019/08/14/动态规划之01背包详解/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+	  <div>
+		
+		<div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">------ 结界 ------</div>
+    
+</div>
+		
+	  </div>
+	  
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/Dynamic-Programming/" rel="tag"><i class="fa fa-tag"></i> Dynamic Programming</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2019/08/14/Windows-10-消除多余的网络编号的方法/" rel="prev" title="Windows 10 消除多余的网络编号的方法">
+      <i class="fa fa-chevron-left"></i> Windows 10 消除多余的网络编号的方法
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2019/08/14/前端实现ip定位的方法/" rel="next" title="前端实现ip定位的方法">
+      前端实现ip定位的方法 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  
+   <a href="/">
+    <img class="site-author-image" itemprop="image" alt="Infinity"
+      src="/images/avatar.png">
+   </a>
+  <p class="site-author-name" itemprop="name">Infinity</p>
+  <div class="site-description" itemprop="description">Stars are only visible in darkness.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">36</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">太极</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">126k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">1:55</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script size="300" alpha="0.6" zIndex="-1" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/pisces.js"></script>
+<script src="/js/next-boot.js"></script>
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.getAttribute('pjax') !== null) {
+      script.setAttribute('pjax', '');
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+  
+<!-- calendar widget -->
+
+    <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-calendar/calendar.min.js"></script>
+    <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-calendar/languages.min.js"></script>
+    <script type="text/javascript">
+    $(function() {
+        $('#CloudCalendar').aCalendar('zh-CN',
+            $.extend(
+                '', {
+                    single:true,
+                    root:'/calendar/'
+                }
+            )
+        );
+    });
+    </script>
+
+
+    </div>
+  <script src="https://cdn.jsdelivr.net/gh/Shadowairing/MyBlog_MISC/Live2d-Widget_Custom/Live2d-Widget_Custom_0000/autoload.js"></script>
+</body>
+</html>

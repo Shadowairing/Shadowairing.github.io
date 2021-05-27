@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('https://www.sstkayr.com').hostname,
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.7.1',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":false,"style":"mac"},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="因为最近写网站需要弄个视频，就学习了一下前端实现播放视频，本文介绍三种方法">
+<meta name="keywords" content="WEB Front-end Development">
+<meta property="og:type" content="article">
+<meta property="og:title" content="前端实现播放视频">
+<meta property="og:url" content="https://www.sstkayr.com/2019/10/11/前端实现播放视频/index.html">
+<meta property="og:site_name" content="太极">
+<meta property="og:description" content="因为最近写网站需要弄个视频，就学习了一下前端实现播放视频，本文介绍三种方法">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-05-14T13:38:35.930Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="前端实现播放视频">
+<meta name="twitter:description" content="因为最近写网站需要弄个视频，就学习了一下前端实现播放视频，本文介绍三种方法">
+
+<link rel="canonical" href="https://www.sstkayr.com/2019/10/11/前端实现播放视频/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>前端实现播放视频 | 太极</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">太极</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">宇宙之浩瀚 万物之无穷</p>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签<span class="badge">11</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类<span class="badge">5</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">36</span></a>
+
+  </li>
+        <li class="menu-item menu-item-schedule">
+
+    <a href="/schedule/" rel="section"><i class="fa fa-fw fa-calendar"></i>日程表</a>
+
+  </li>
+        <li class="menu-item menu-item-links">
+
+    <a href="/links/" rel="section"><i class="fa fa-fw fa-link"></i>链接</a>
+
+  </li>
+        <li class="menu-item menu-item-message-board">
+
+    <a href="/message-board/" rel="section"><i class="fa fa-fw fa-bookmark-o"></i>留言板</a>
+
+  </li>
+        <li class="menu-item menu-item-taichi-music-player">
+
+    <a href="https://music.sstkayr.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-music"></i>太极音乐播放器</a>
+
+  </li>
+        <li class="menu-item menu-item-taichi-zone">
+
+    <a href="https://tizone.sstkayr.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-compass"></i>太极空间</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+	
+	<script>
+		document.addEventListener("visibilitychange", function () {
+        if (document.hidden) {
+            document.title="乾坤";
+			} 
+		else{
+			document.title="☯";
+			setTimeout(function(){
+				document.title="太极";
+				}, 1200);
+			}
+		}, false);
+	</script>
+	
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.sstkayr.com/2019/10/11/前端实现播放视频/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Infinity">
+      <meta itemprop="description" content="Stars are only visible in darkness.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="太极">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          前端实现播放视频
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-10-11 21:35:14" itemprop="dateCreated datePublished" datetime="2019-10-11T21:35:14+08:00">2019-10-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-05-14 21:38:35" itemprop="dateModified" datetime="2020-05-14T21:38:35+08:00">2020-05-14</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Information-Technology/" itemprop="url" rel="index">
+                    <span itemprop="name">Information Technology</span>
+                  </a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Information-Technology/Practical-Tutorial/" itemprop="url" rel="index">
+                    <span itemprop="name">Practical Tutorial</span>
+                  </a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>5.9k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>5 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="因为最近写网站需要弄个视频，就学习了一下"><a href="#因为最近写网站需要弄个视频，就学习了一下" class="headerlink" title="因为最近写网站需要弄个视频，就学习了一下"></a>因为最近写网站需要弄个视频，就学习了一下</h3><h3 id="前端实现播放视频，本文介绍三种方法"><a href="#前端实现播放视频，本文介绍三种方法" class="headerlink" title="前端实现播放视频，本文介绍三种方法"></a>前端实现播放视频，本文介绍三种方法</h3><a id="more"></a>
+<h4 id="第一种：有播放-暂停键，画面的放大-缩小功能"><a href="#第一种：有播放-暂停键，画面的放大-缩小功能" class="headerlink" title="第一种：有播放/暂停键，画面的放大/缩小功能"></a>第一种：有<code>播放/暂停</code>键，画面的<code>放大/缩小</code>功能</h4><h5 id="单击按键实现其对应功能"><a href="#单击按键实现其对应功能" class="headerlink" title="单击按键实现其对应功能"></a>单击按键实现其对应功能</h5><h5 id="播放视频源码如下"><a href="#播放视频源码如下" class="headerlink" title="播放视频源码如下"></a>播放视频源码如下</h5><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">style</span>=<span class="string">"text-align:center"</span>&gt;</span> </span><br><span class="line">  <span class="tag">&lt;<span class="name">button</span> <span class="attr">onclick</span>=<span class="string">"playPause()"</span>&gt;</span>Play/Pause<span class="tag">&lt;/<span class="name">button</span>&gt;</span> </span><br><span class="line">  <span class="tag">&lt;<span class="name">button</span> <span class="attr">onclick</span>=<span class="string">"makeBig()"</span>&gt;</span>Big<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">button</span> <span class="attr">onclick</span>=<span class="string">"makeSmall()"</span>&gt;</span>Small<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">button</span> <span class="attr">onclick</span>=<span class="string">"makeNormal()"</span>&gt;</span>Normal<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">br</span>&gt;</span> </span><br><span class="line">  <span class="tag">&lt;<span class="name">video</span> <span class="attr">id</span>=<span class="string">"video0"</span> <span class="attr">width</span>=<span class="string">"944"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">source</span> <span class="attr">src</span>=<span class="string">"https://cdn.jsdelivr.net/gh/Shadowairing/MyBlog_Data_Custom_00000@master/Videos/demo/Your_Name_Demo/Your_Name_Demo_000.mp4"</span> <span class="attr">type</span>=<span class="string">"video/mp4"</span>&gt;</span></span><br><span class="line">    加载错误，您的浏览器不支持 HTML5 video 标签</span><br><span class="line">  <span class="tag">&lt;/<span class="name">video</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span> </span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span> </span><br><span class="line"><span class="javascript"><span class="keyword">var</span> myVideo=<span class="built_in">document</span>.getElementById(<span class="string">"video0"</span>); </span></span><br><span class="line"><span class="actionscript"><span class="function"><span class="keyword">function</span> <span class="title">playPause</span><span class="params">()</span></span>&#123; </span></span><br><span class="line"><span class="actionscript">  <span class="keyword">if</span>(myVideo.paused) </span></span><br><span class="line">	myVideo.play(); </span><br><span class="line"><span class="actionscript">  <span class="keyword">else</span> </span></span><br><span class="line">	myVideo.pause(); </span><br><span class="line">&#125; </span><br><span class="line"><span class="actionscript"><span class="function"><span class="keyword">function</span> <span class="title">makeBig</span><span class="params">()</span></span>&#123; </span></span><br><span class="line">  myVideo.width=1180; </span><br><span class="line">&#125; </span><br><span class="line"><span class="actionscript"><span class="function"><span class="keyword">function</span> <span class="title">makeSmall</span><span class="params">()</span></span>&#123; </span></span><br><span class="line">  myVideo.width=710; </span><br><span class="line">&#125; </span><br><span class="line"><span class="actionscript"><span class="function"><span class="keyword">function</span> <span class="title">makeNormal</span><span class="params">()</span></span>&#123; </span></span><br><span class="line">  myVideo.width=940; </span><br><span class="line">&#125; </span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h5 id="渲染出的效果如下"><a href="#渲染出的效果如下" class="headerlink" title="渲染出的效果如下"></a>渲染出的效果如下</h5><p><div style="text-align:center"> 
+  <button onclick="playPause()">Play/Pause</button> 
+  <button onclick="makeBig()">Big</button>
+  <button onclick="makeSmall()">Small</button>
+  <button onclick="makeNormal()">Normal</button>
+  <br> 
+  <video id="video0" width="944">
+    <source src="https://cdn.jsdelivr.net/gh/Shadowairing/MyBlog_Data_Custom_00000@master/Videos/demo/Your_Name_Demo/Your_Name_Demo_000.mp4" type="video/mp4">
+    加载错误，您的浏览器不支持 HTML5 video 标签
+  </video>
+</div> </p>
+<script> 
+var myVideo=document.getElementById("video0"); 
+function playPause(){ 
+  if(myVideo.paused) 
+    myVideo.play(); 
+  else 
+    myVideo.pause(); 
+} 
+function makeBig(){ 
+  myVideo.width=1180; 
+} 
+function makeSmall(){ 
+  myVideo.width=710; 
+} 
+function makeNormal(){ 
+  myVideo.width=940; 
+} 
+</script>
+
+<h4 id="第二种：单击视频区域实现播放"><a href="#第二种：单击视频区域实现播放" class="headerlink" title="第二种：单击视频区域实现播放"></a>第二种：单击<code>视频区域</code>实现播放</h4><h5 id="播放视频源码如下-1"><a href="#播放视频源码如下-1" class="headerlink" title="播放视频源码如下"></a>播放视频源码如下</h5><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">style</span>=<span class="string">"text-align:center"</span>&gt;</span> </span><br><span class="line">  <span class="tag">&lt;<span class="name">video</span> <span class="attr">id</span>=<span class="string">"video1"</span> <span class="attr">width</span>=<span class="string">"1180"</span><span class="attr">src</span>=<span class="string">"https://cdn.jsdelivr.net/gh/Shadowairing/MyBlog_Data_Custom_00000@master/Videos/demo/Your_Name_Demo/Your_Name_Demo_000.mp4"</span> <span class="attr">type</span>=<span class="string">"video/mp4"</span>&gt;</span></span><br><span class="line">    加载错误，您的浏览器不支持 HTML5 video 标签</span><br><span class="line">  <span class="tag">&lt;/<span class="name">video</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span> </span><br><span class="line"><span class="javascript"><span class="keyword">var</span> video1=<span class="built_in">document</span>.getElementById(<span class="string">"video1"</span>);</span></span><br><span class="line"><span class="actionscript">video1.onclick=<span class="function"><span class="keyword">function</span><span class="params">()</span></span>&#123;</span></span><br><span class="line"><span class="actionscript">  <span class="keyword">if</span>(video1.paused)&#123;</span></span><br><span class="line">	video1.play();</span><br><span class="line">  &#125;</span><br><span class="line"><span class="actionscript">  <span class="keyword">else</span>&#123;</span></span><br><span class="line">	video1.pause();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h5 id="渲染出的效果如下-1"><a href="#渲染出的效果如下-1" class="headerlink" title="渲染出的效果如下"></a>渲染出的效果如下</h5><p><div style="text-align:center"> 
+  <video id="video1" width="1180" src="https://cdn.jsdelivr.net/gh/Shadowairing/MyBlog_Data_Custom_00000@master/Videos/demo/Your_Name_Demo/Your_Name_Demo_000.mp4" type="video/mp4">
+    加载错误，您的浏览器不支持 HTML5 video 标签
+  </video>
+</div></p>
+<script> 
+var video1=document.getElementById("video1");
+video1.onclick=function(){
+  if(video1.paused){
+    video1.play();
+  }
+  else{
+    video1.pause();
+  }
+}
+</script>
+
+<h4 id="第三种：将-MP4文件切片成-M3U8然后再播放"><a href="#第三种：将-MP4文件切片成-M3U8然后再播放" class="headerlink" title="第三种：将.MP4文件切片成.M3U8然后再播放"></a>第三种：将<code>.MP4</code>文件切片成<code>.M3U8</code>然后再播放</h4><h5 id="首先下载ffmpeg"><a href="#首先下载ffmpeg" class="headerlink" title="首先下载ffmpeg"></a>首先下载ffmpeg</h5><p>Windows版ffmpeg下载地址:<a href="https://ffmpeg.zeranoe.com/builds/" target="_blank" rel="noopener">点击进入下载页面</a><br>切片命令如下<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ffmpeg -<span class="selector-tag">i</span> 你的路径<span class="selector-class">.mp4</span> -pix_fmt yuv420p -c:v libx264 -c:<span class="selector-tag">a</span> aac -strict -<span class="number">2</span> -f hls -hls_list_size <span class="number">0</span> 你的输出.m3u8</span><br></pre></td></tr></table></figure></p>
+<h5 id="播放视频源码如下-2"><a href="#播放视频源码如下-2" class="headerlink" title="播放视频源码如下"></a>播放视频源码如下</h5><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">link</span> <span class="attr">href</span>=<span class="string">"https://cdn.jsdelivr.net/gh/Shadowairing/MyBlog_MISC/MyBlog_VideoPlayer/OnlinePlayer_0000/video-js.css"</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">'https://cdn.jsdelivr.net/gh/Shadowairing/MyBlog_MISC/MyBlog_VideoPlayer/OnlinePlayer_0000/video.js'</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"https://cdn.jsdelivr.net/gh/Shadowairing/MyBlog_MISC/MyBlog_VideoPlayer/OnlinePlayer_0000/videojs-contrib-hls.min.js"</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- videojs-contrib-hls 用于在电脑端播放 如果只需手机播放可以不引入 --&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="css">        <span class="selector-class">.video-js</span> <span class="selector-class">.vjs-tech</span> &#123;<span class="attribute">position</span>: relative <span class="meta">!important</span>;&#125;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">video</span> <span class="attr">id</span>=<span class="string">"myVideo"</span> <span class="attr">class</span>=<span class="string">"video-js vjs-default-skin vjs-big-play-centered"</span> <span class="attr">controls</span> <span class="attr">preload</span>=<span class="string">"auto"</span> <span class="attr">data-setup</span>=<span class="string">'&#123;&#125;'</span> <span class="attr">style</span>=<span class="string">'width: 100%;height: auto'</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">source</span> <span class="attr">id</span>=<span class="string">"source"</span> <span class="attr">src</span>=<span class="string">"https://cdn.jsdelivr.net/gh/Shadowairing/MyBlog_Data_Custom_00000@master/Videos/demo/Your_Name_Demo/ts_000/Your_Name_Demo_ts_000.m3u8"</span> <span class="attr">type</span>=<span class="string">"application/x-mpegURL"</span>&gt;</span><span class="tag">&lt;/<span class="name">source</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">video</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"> </span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="actionscript">    <span class="comment">// videojs 简单使用</span></span></span><br><span class="line"><span class="actionscript">    <span class="keyword">var</span> myVideo = videojs(<span class="string">'myVideo'</span>, &#123;</span></span><br><span class="line"><span class="actionscript">        bigPlayButton: <span class="literal">true</span>,</span></span><br><span class="line"><span class="actionscript">        textTrackDisplay: <span class="literal">false</span>,</span></span><br><span class="line"><span class="actionscript">        posterImage: <span class="literal">false</span>,</span></span><br><span class="line"><span class="actionscript">        errorDisplay: <span class="literal">false</span>,</span></span><br><span class="line">    &#125;)</span><br><span class="line">    myVideo.play()</span><br><span class="line"><span class="actionscript">    <span class="keyword">var</span> changeVideo = <span class="function"><span class="keyword">function</span> <span class="params">(vdoSrc)</span> </span>&#123;</span></span><br><span class="line"><span class="javascript">        <span class="keyword">if</span> (<span class="regexp">/\.m3u8$/</span>.test(vdoSrc)) &#123; <span class="comment">//判断视频源是否是m3u8的格式</span></span></span><br><span class="line">            myVideo.src(&#123;</span><br><span class="line">                src: vdoSrc,</span><br><span class="line"><span class="actionscript">                type: <span class="string">'application/x-mpegURL'</span> <span class="comment">//在重新添加视频源的时候需要给新的type的值</span></span></span><br><span class="line">            &#125;)</span><br><span class="line"><span class="actionscript">        &#125; <span class="keyword">else</span> &#123;</span></span><br><span class="line">            myVideo.src(vdoSrc)</span><br><span class="line">        &#125;</span><br><span class="line">        myVideo.load();</span><br><span class="line">        myVideo.play();</span><br><span class="line">    &#125;</span><br><span class="line">    &#125;)</span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h5 id="渲染出的效果如下-2"><a href="#渲染出的效果如下-2" class="headerlink" title="渲染出的效果如下"></a>渲染出的效果如下</h5><html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <link href="https://cdn.jsdelivr.net/gh/Shadowairing/MyBlog_MISC/MyBlog_VideoPlayer/OnlinePlayer_0000/video-js.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/gh/Shadowairing/MyBlog_MISC/MyBlog_VideoPlayer/OnlinePlayer_0000/video.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/Shadowairing/MyBlog_MISC/MyBlog_VideoPlayer/OnlinePlayer_0000/videojs-contrib-hls.min.js" type="text/javascript"></script>
+    <!-- videojs-contrib-hls 用于在电脑端播放 如果只需手机播放可以不引入 -->
+</head>
+<body>
+    <style>
+        .video-js .vjs-tech {position: relative !important;}
+    </style>
+    <div>
+        <video id="myVideo" class="video-js vjs-default-skin vjs-big-play-centered" controls preload="auto" data-setup="{}" style="width: 100%;height: auto">
+            <source id="source" src="https://cdn.jsdelivr.net/gh/Shadowairing/MyBlog_Data_Custom_00000@master/Videos/demo/Your_Name_Demo/ts_000/Your_Name_Demo_ts_000.m3u8" type="application/x-mpegURL">
+        </video>
+    </div>
+</body>
+
+<script>
+    // videojs 简单使用
+    var myVideo = videojs('myVideo', {
+        bigPlayButton: true,
+        textTrackDisplay: false,
+        posterImage: false,
+        errorDisplay: false,
+    })
+    myVideo.play()
+    var changeVideo = function (vdoSrc) {
+        if (/\.m3u8$/.test(vdoSrc)) { //判断视频源是否是m3u8的格式
+            myVideo.src({
+                src: vdoSrc,
+                type: 'application/x-mpegURL' //在重新添加视频源的时候需要给新的type的值
+            })
+        } else {
+            myVideo.src(vdoSrc)
+        }
+        myVideo.load();
+        myVideo.play();
+    }
+    })
+</script>
+</html>
+
+<h5 id="播放视频源码来自于：前端video标签播放m3u8格式视频，原版源码如下"><a href="#播放视频源码来自于：前端video标签播放m3u8格式视频，原版源码如下" class="headerlink" title="播放视频源码来自于：前端video标签播放m3u8格式视频，原版源码如下"></a>播放视频源码来自于：<a href="https://blog.csdn.net/qq_30282133/article/details/81566273" target="_blank" rel="noopener">前端video标签播放m3u8格式视频</a>，原版源码如下</h5><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE html&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">"zh-CN"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"UTF-8"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>前端播放m3u8格式视频<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">link</span> <span class="attr">href</span>=<span class="string">"https://vjs.zencdn.net/7.4.1/video-js.css"</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">'https://vjs.zencdn.net/7.4.1/video.js'</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"https://cdnjs.cloudflare.com/ajax/libs/videojs-contrib-hls/5.15.0/videojs-contrib-hls.min.js"</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- videojs-contrib-hls 用于在电脑端播放 如果只需手机播放可以不引入 --&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="css">        <span class="selector-class">.video-js</span> <span class="selector-class">.vjs-tech</span> &#123;<span class="attribute">position</span>: relative <span class="meta">!important</span>;&#125;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">video</span> <span class="attr">id</span>=<span class="string">"myVideo"</span> <span class="attr">class</span>=<span class="string">"video-js vjs-default-skin vjs-big-play-centered"</span> <span class="attr">controls</span> <span class="attr">preload</span>=<span class="string">"auto"</span> <span class="attr">data-setup</span>=<span class="string">'&#123;&#125;'</span> <span class="attr">style</span>=<span class="string">'width: 100%;height: auto'</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">source</span> <span class="attr">id</span>=<span class="string">"source"</span> <span class="attr">src</span>=<span class="string">"http://1252093142.vod2.myqcloud.com/4704461fvodcq1252093142/48c8a9475285890781000441992/playlist.m3u8"</span> <span class="attr">type</span>=<span class="string">"application/x-mpegURL"</span>&gt;</span><span class="tag">&lt;/<span class="name">source</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">video</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"qiehuan"</span> <span class="attr">style</span>=<span class="string">"width:100px;height: 100px;background: red;margin:0 auto;line-height: 100px;color:#fff;text-align: center"</span>&gt;</span>切换视频<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"> </span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="actionscript">    <span class="comment">// videojs 简单使用</span></span></span><br><span class="line"><span class="actionscript">    <span class="keyword">var</span> myVideo = videojs(<span class="string">'myVideo'</span>, &#123;</span></span><br><span class="line"><span class="actionscript">        bigPlayButton: <span class="literal">true</span>,</span></span><br><span class="line"><span class="actionscript">        textTrackDisplay: <span class="literal">false</span>,</span></span><br><span class="line"><span class="actionscript">        posterImage: <span class="literal">false</span>,</span></span><br><span class="line"><span class="actionscript">        errorDisplay: <span class="literal">false</span>,</span></span><br><span class="line">    &#125;)</span><br><span class="line">    myVideo.play()</span><br><span class="line"><span class="actionscript">    <span class="keyword">var</span> changeVideo = <span class="function"><span class="keyword">function</span> <span class="params">(vdoSrc)</span> </span>&#123;</span></span><br><span class="line"><span class="javascript">        <span class="keyword">if</span> (<span class="regexp">/\.m3u8$/</span>.test(vdoSrc)) &#123; <span class="comment">//判断视频源是否是m3u8的格式</span></span></span><br><span class="line">            myVideo.src(&#123;</span><br><span class="line">                src: vdoSrc,</span><br><span class="line"><span class="actionscript">                type: <span class="string">'application/x-mpegURL'</span> <span class="comment">//在重新添加视频源的时候需要给新的type的值</span></span></span><br><span class="line">            &#125;)</span><br><span class="line"><span class="actionscript">        &#125; <span class="keyword">else</span> &#123;</span></span><br><span class="line">            myVideo.src(vdoSrc)</span><br><span class="line">        &#125;</span><br><span class="line">        myVideo.load();</span><br><span class="line">        myVideo.play();</span><br><span class="line">    &#125;</span><br><span class="line"><span class="actionscript">    <span class="keyword">var</span> src = <span class="string">'http://1252093142.vod2.myqcloud.com/4704461fvodcq1252093142/f865d8a05285890787810776469/playlist.f3.m3u8'</span>;</span></span><br><span class="line"><span class="javascript">    <span class="built_in">document</span>.querySelector(<span class="string">'.qiehuan'</span>).addEventListener(<span class="string">'click'</span>, <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span></span><br><span class="line">        changeVideo(src);</span><br><span class="line">    &#125;)</span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Infinity
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://www.sstkayr.com/2019/10/11/前端实现播放视频/" title="前端实现播放视频">https://www.sstkayr.com/2019/10/11/前端实现播放视频/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+	  <div>
+		
+		<div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">------ 结界 ------</div>
+    
+</div>
+		
+	  </div>
+	  
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/WEB-Front-end-Development/" rel="tag"><i class="fa fa-tag"></i> WEB Front-end Development</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2019/10/07/写了一个定时关机程序/" rel="prev" title="写了一个定时关机程序">
+      <i class="fa fa-chevron-left"></i> 写了一个定时关机程序
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2019/10/15/太极客户端使用说明/" rel="next" title="太极客户端使用说明">
+      太极客户端使用说明 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#因为最近写网站需要弄个视频，就学习了一下"><span class="nav-number">1.</span> <span class="nav-text">因为最近写网站需要弄个视频，就学习了一下</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#前端实现播放视频，本文介绍三种方法"><span class="nav-number">2.</span> <span class="nav-text">前端实现播放视频，本文介绍三种方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#第一种：有播放-暂停键，画面的放大-缩小功能"><span class="nav-number">2.1.</span> <span class="nav-text">第一种：有播放/暂停键，画面的放大/缩小功能</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#单击按键实现其对应功能"><span class="nav-number">2.1.1.</span> <span class="nav-text">单击按键实现其对应功能</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#播放视频源码如下"><span class="nav-number">2.1.2.</span> <span class="nav-text">播放视频源码如下</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#渲染出的效果如下"><span class="nav-number">2.1.3.</span> <span class="nav-text">渲染出的效果如下</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#第二种：单击视频区域实现播放"><span class="nav-number">2.2.</span> <span class="nav-text">第二种：单击视频区域实现播放</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#播放视频源码如下-1"><span class="nav-number">2.2.1.</span> <span class="nav-text">播放视频源码如下</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#渲染出的效果如下-1"><span class="nav-number">2.2.2.</span> <span class="nav-text">渲染出的效果如下</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#第三种：将-MP4文件切片成-M3U8然后再播放"><span class="nav-number">2.3.</span> <span class="nav-text">第三种：将.MP4文件切片成.M3U8然后再播放</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#首先下载ffmpeg"><span class="nav-number">2.3.1.</span> <span class="nav-text">首先下载ffmpeg</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#播放视频源码如下-2"><span class="nav-number">2.3.2.</span> <span class="nav-text">播放视频源码如下</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#渲染出的效果如下-2"><span class="nav-number">2.3.3.</span> <span class="nav-text">渲染出的效果如下</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#播放视频源码来自于：前端video标签播放m3u8格式视频，原版源码如下"><span class="nav-number">2.3.4.</span> <span class="nav-text">播放视频源码来自于：前端video标签播放m3u8格式视频，原版源码如下</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  
+   <a href="/">
+    <img class="site-author-image" itemprop="image" alt="Infinity"
+      src="/images/avatar.png">
+   </a>
+  <p class="site-author-name" itemprop="name">Infinity</p>
+  <div class="site-description" itemprop="description">Stars are only visible in darkness.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">36</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">太极</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">126k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">1:55</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script size="300" alpha="0.6" zIndex="-1" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/pisces.js"></script>
+<script src="/js/next-boot.js"></script>
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.getAttribute('pjax') !== null) {
+      script.setAttribute('pjax', '');
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+  
+<!-- calendar widget -->
+
+    <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-calendar/calendar.min.js"></script>
+    <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-calendar/languages.min.js"></script>
+    <script type="text/javascript">
+    $(function() {
+        $('#CloudCalendar').aCalendar('zh-CN',
+            $.extend(
+                '', {
+                    single:true,
+                    root:'/calendar/'
+                }
+            )
+        );
+    });
+    </script>
+
+
+    </div>
+  <script src="https://cdn.jsdelivr.net/gh/Shadowairing/MyBlog_MISC/Live2d-Widget_Custom/Live2d-Widget_Custom_0000/autoload.js"></script>
+</body>
+</html>

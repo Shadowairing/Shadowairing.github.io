@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('https://www.sstkayr.com').hostname,
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.7.1',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":false,"style":"mac"},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="简要分析一下CS起源吧，准备不充分，所以有些部分没有截图，内附成品下载">
+<meta name="keywords" content="易语言">
+<meta property="og:type" content="article">
+<meta property="og:title" content="简要分析一下cs起源">
+<meta property="og:url" content="https://www.sstkayr.com/2020/05/13/简要分析一下cs起源/index.html">
+<meta property="og:site_name" content="太极">
+<meta property="og:description" content="简要分析一下CS起源吧，准备不充分，所以有些部分没有截图，内附成品下载">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://www.sstkayr.com/2020/05/13/简要分析一下cs起源/基址讲解1.png">
+<meta property="og:image" content="https://www.sstkayr.com/2020/05/13/简要分析一下cs起源/矩阵演示.png">
+<meta property="og:image" content="https://www.sstkayr.com/2020/05/13/简要分析一下cs起源/矩阵数据1.png">
+<meta property="og:image" content="https://www.sstkayr.com/2020/05/13/简要分析一下cs起源/矩阵数据2.png">
+<meta property="og:image" content="https://www.sstkayr.com/2020/05/13/简要分析一下cs起源/矩阵数据3.png">
+<meta property="og:image" content="https://www.sstkayr.com/2020/05/13/简要分析一下cs起源/矩阵分析1.png">
+<meta property="og:image" content="https://www.sstkayr.com/2020/05/13/简要分析一下cs起源/骨骼数据1.png">
+<meta property="og:image" content="https://www.sstkayr.com/2020/05/13/简要分析一下cs起源/骨骼绘制效果1.png">
+<meta property="og:image" content="https://www.sstkayr.com/2020/05/13/简要分析一下cs起源/骨骼绘制效果2.png">
+<meta property="og:image" content="https://www.sstkayr.com/2020/05/13/简要分析一下cs起源/骨骼分析1.png">
+<meta property="og:image" content="https://www.sstkayr.com/2020/05/13/简要分析一下cs起源/骨骼分析2.png">
+<meta property="og:image" content="https://www.sstkayr.com/2020/05/13/简要分析一下cs起源/骨骼分析3.png">
+<meta property="og:image" content="https://www.sstkayr.com/2020/05/13/简要分析一下cs起源/骨骼分析4.png">
+<meta property="og:image" content="https://www.sstkayr.com/2020/05/13/简要分析一下cs起源/骨骼分析5.png">
+<meta property="og:image" content="https://www.sstkayr.com/2020/05/13/简要分析一下cs起源/骨骼分析6.png">
+<meta property="og:image" content="https://www.sstkayr.com/2020/05/13/简要分析一下cs起源/骨骼分析7.png">
+<meta property="og:image" content="https://www.sstkayr.com/2020/05/13/简要分析一下cs起源/骨骼分析8.png">
+<meta property="og:image" content="https://www.sstkayr.com/2020/05/13/简要分析一下cs起源/骨骼分析9.png">
+<meta property="og:image" content="https://www.sstkayr.com/2020/05/13/简要分析一下cs起源/骨骼分析10.png">
+<meta property="og:image" content="https://www.sstkayr.com/2020/05/13/简要分析一下cs起源/骨骼分析11.png">
+<meta property="og:image" content="https://www.sstkayr.com/2020/05/13/简要分析一下cs起源/骨骼分析12.png">
+<meta property="og:image" content="https://www.sstkayr.com/2020/05/13/简要分析一下cs起源/自瞄讲解1.png">
+<meta property="og:image" content="https://www.sstkayr.com/2020/05/13/简要分析一下cs起源/使用效果1.png">
+<meta property="og:image" content="https://www.sstkayr.com/2020/05/13/简要分析一下cs起源/使用效果2.png">
+<meta property="og:image" content="https://www.sstkayr.com/2020/05/13/简要分析一下cs起源/使用效果3.png">
+<meta property="og:image" content="https://www.sstkayr.com/2020/05/13/简要分析一下cs起源/使用效果4.png">
+<meta property="og:updated_time" content="2020-08-15T05:06:37.612Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="简要分析一下cs起源">
+<meta name="twitter:description" content="简要分析一下CS起源吧，准备不充分，所以有些部分没有截图，内附成品下载">
+<meta name="twitter:image" content="https://www.sstkayr.com/2020/05/13/简要分析一下cs起源/基址讲解1.png">
+
+<link rel="canonical" href="https://www.sstkayr.com/2020/05/13/简要分析一下cs起源/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>简要分析一下cs起源 | 太极</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">太极</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">宇宙之浩瀚 万物之无穷</p>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签<span class="badge">11</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类<span class="badge">5</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">36</span></a>
+
+  </li>
+        <li class="menu-item menu-item-schedule">
+
+    <a href="/schedule/" rel="section"><i class="fa fa-fw fa-calendar"></i>日程表</a>
+
+  </li>
+        <li class="menu-item menu-item-links">
+
+    <a href="/links/" rel="section"><i class="fa fa-fw fa-link"></i>链接</a>
+
+  </li>
+        <li class="menu-item menu-item-message-board">
+
+    <a href="/message-board/" rel="section"><i class="fa fa-fw fa-bookmark-o"></i>留言板</a>
+
+  </li>
+        <li class="menu-item menu-item-taichi-music-player">
+
+    <a href="https://music.sstkayr.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-music"></i>太极音乐播放器</a>
+
+  </li>
+        <li class="menu-item menu-item-taichi-zone">
+
+    <a href="https://tizone.sstkayr.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-compass"></i>太极空间</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+	
+	<script>
+		document.addEventListener("visibilitychange", function () {
+        if (document.hidden) {
+            document.title="乾坤";
+			} 
+		else{
+			document.title="☯";
+			setTimeout(function(){
+				document.title="太极";
+				}, 1200);
+			}
+		}, false);
+	</script>
+	
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.sstkayr.com/2020/05/13/简要分析一下cs起源/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Infinity">
+      <meta itemprop="description" content="Stars are only visible in darkness.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="太极">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          简要分析一下cs起源
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-05-13 23:00:26" itemprop="dateCreated datePublished" datetime="2020-05-13T23:00:26+08:00">2020-05-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-08-15 13:06:37" itemprop="dateModified" datetime="2020-08-15T13:06:37+08:00">2020-08-15</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Information-Technology/" itemprop="url" rel="index">
+                    <span itemprop="name">Information Technology</span>
+                  </a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Information-Technology/Reverse-Engineering/" itemprop="url" rel="index">
+                    <span itemprop="name">Reverse Engineering</span>
+                  </a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>20k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>18 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>简要分析一下CS起源吧，准备不充分，所以有些部分没有截图，内附成品下载<br><a id="more"></a><br>在开始之前，推荐这款工具，它可以计算不同地址直接的差值，还可以进行进制转换</p>
+<p><a href="https://www.sstkayr.com/2020/05/14/%E5%86%85%E5%AD%98%E5%9C%B0%E5%9D%80%E8%BF%9B%E5%88%B6%E8%AE%A1%E7%AE%97%E8%BD%AC%E6%8D%A2%E5%B7%A5%E5%85%B7/">我在这里哦</a></p>
+<p>由于一口气写完的，所以如果哪里有问题请提出来</p>
+<h4 id="基址篇"><a href="#基址篇" class="headerlink" title="基址篇"></a>基址篇</h4><h5 id="关于找自己的基址，我推荐两种方法"><a href="#关于找自己的基址，我推荐两种方法" class="headerlink" title="关于找自己的基址，我推荐两种方法"></a>关于找自己的基址，我推荐两种方法</h5><p>第一种：跳楼，搜血量</p>
+<p>第二种：爬梯子，原理就是搜索z的坐标</p>
+<p>然后通过<code>F5</code>查找访问，机智地找到了自己的地址：<code>server.dll+4F3FEC</code>，基址是：<code>4F3FEC</code></p>
+<h5 id="解释一下基址："><a href="#解释一下基址：" class="headerlink" title="解释一下基址："></a>解释一下基址：</h5><p>我来解释一下什么是基址，首先<code>4F3FEC</code>是基址，他就是一串数字，比如说一堆连续柜子（不可分割），第<code>4F3FEC</code>个是你的柜子</p>
+<p>但是仅仅是<code>4F3FEC</code>是不够的，<code>4F3FEC</code>必须加上<code>server.dll</code>才可以</p>
+<p>为了方便理解，请看图，图中的<code>target</code>代表了<code>4F3FEC</code>，我下面讲解的就会用<code>target</code>代替<code>4F3FEC</code></p>
+<p>一共有5堆柜子，每堆6个</p>
+<img src="/2020/05/13/简要分析一下cs起源/基址讲解1.png">
+<p><code>server.dll</code>是第19个，<code>target</code>相对于<code>server.dll</code>是第2个，<code>target</code>相对于整体来说是第21个</p>
+<p>请注意，此时的柜子堆排列顺序是 ABCDE，如果排列顺序改为 DABCE ，此时<code>server.dll</code>是第1个，<code>target</code>相对于<code>server.dll</code>是第2个，<code>target</code>相对于整体来说是第3个</p>
+<p>所以这个时候，你就会发现”<code>target</code>相对于<code>server.dll</code>是第2个”这个是不变的，所以就把这个叫做基址</p>
+<p>但是每次启动游戏ABCDE的排列顺序都会不一样，所以就会导致 “<code>target</code>相对于整体的位置” 会随着每次开游戏变化</p>
+<p>至此，你应该理解<code>server.dll</code>和<code>4F3FEC</code>的关系了</p>
+<p>我们修改内存，要找的是 “<code>target</code>相对于整体的位置” 这个地方的数据，所以每次必须是 <code>server.dll+4F3FEC</code>，所以也把 <code>server.dll+4F3FEC</code> 叫做基址</p>
+<p>注意：虽然 <code>4F3FEC</code> 和 <code>server.dll+4F3FEC</code> 都叫基址，但是意义却不一样，我下面写代码的时候都会把 <code>server.dll+4F3FEC</code> 叫做基址，所以这里先讲清楚</p>
+<p>以上都是我个人的理解，不保证正确</p>
+<h5 id="然后，开始找自己的血量偏移，人物坐标偏移"><a href="#然后，开始找自己的血量偏移，人物坐标偏移" class="headerlink" title="然后，开始找自己的血量偏移，人物坐标偏移"></a>然后，开始找自己的血量偏移，人物坐标偏移</h5><p>血量和坐标可以通过上面的方法找到，偏移就可以分析出来</p>
+<p>血量偏移：<code>进制_十六到十(&quot;E4&quot;)</code></p>
+<p>人物坐标偏移，自己的XYZ坐标表示的是自己脚下的点：</p>
+<figure class="highlight avrasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">X:</span>进制_十六到十(<span class="string">"280"</span>)</span><br><span class="line"><span class="symbol">Y:</span>进制_十六到十(<span class="string">"284"</span>)</span><br><span class="line"><span class="symbol">Z:</span>进制_十六到十(<span class="string">"288"</span>)</span><br></pre></td></tr></table></figure>
+<p>这样，自己的基址 以及血量，坐标偏移就找完了</p>
+<h5 id="找对象的基址"><a href="#找对象的基址" class="headerlink" title="找对象的基址"></a>找对象的基址</h5><p>我推荐只保留你自己和一个队友，因为这样比较好找</p>
+<p>我来说一下找的思路：通过人物坐标来分析，X和Y不好分析出来，通过Z来分析，搜高度就可以了</p>
+<p>然后<code>F5</code>查找访问，很快就找出来了对象的地址：<code>server.dll+4F3FEC</code></p>
+<p>你看这个基址，他眼熟不，你队友是：<code>4F3FFC</code>，你自己是：<code>4F3FEC</code>，也就是说：<code>自己基址+进制_十六到十(&quot;10&quot;) 得到 队友基址</code></p>
+<p>然后再猜想一下，用<code>i</code>表示第几个敌人，我们可以得出</p>
+<figure class="highlight axapta"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">自己地址 = <span class="keyword">client</span>.dll+<span class="number">4</span>F3FEC</span><br><span class="line"></span><br><span class="line">对象地址 = <span class="keyword">client</span>.dll+<span class="number">4</span>F3FEC + i * 进制_十六到十(<span class="string">"10"</span>)</span><br></pre></td></tr></table></figure>
+<p>因为上面分析过血量和坐标，所以这个时候你这个队友的血量和坐标也就分析出来了</p>
+<p>在下文，我会将”自己基址和对象基址”统称为”人物基址”</p>
+<h4 id="矩阵篇"><a href="#矩阵篇" class="headerlink" title="矩阵篇"></a>矩阵篇</h4><p>如果你不知道矩阵是什么，可以下载这个软件 <a href="https://cdn.jsdelivr.net/gh/Shadowairing/MyBlog_Data_Custom_00000@master/MISC/Matrix_demo/Matrix_demo.zip" target="_blank" rel="noopener">矩阵演示</a></p>
+<p>看下图右边的红色方框，那个就是矩阵，你可以自己拖一下左边的滑动条看一看，矩阵简单点说，就是三维坐标转二维（你屏幕上坐标）的一种算法</p>
+<img src="/2020/05/13/简要分析一下cs起源/矩阵演示.png">
+<h5 id="寻找矩阵基址"><a href="#寻找矩阵基址" class="headerlink" title="寻找矩阵基址"></a>寻找矩阵基址</h5><p>然后我们就可以开始找矩阵了，首先拿一把狙，动鼠标搜索变动，不懂鼠标搜索未变动；开一次镜搜索一次变动，不开镜搜索未变动；鼠标不动，人物乱走，搜索未变动</p>
+<p>然后就搜索出了一堆数据，我们浏览内存区域，显示类型小数型，然后调整显示窗口，让他变成4列</p>
+<p>为了方便说，我用xy代替了</p>
+<p>首先说一下，第(3,1)那个值永远是<code>0</code>不用管，其他值根据是随鼠标变动而变动的，而且开不开镜都会不一样，所以和我的不一样是正常的</p>
+<p>下面这个图是不开镜的矩阵，注意第 (3,3) 那个数据是 <code>1.33</code> </p>
+<img src="/2020/05/13/简要分析一下cs起源/矩阵数据1.png">
+<p>下面这个图是第一次开镜的矩阵，注意第 (3,3) 那个数据是 <code>3.55</code> </p>
+<img src="/2020/05/13/简要分析一下cs起源/矩阵数据2.png">
+<p>下面这个图是第二次开镜的矩阵，注意第 (3,3) 那个数据是 <code>15.01</code></p>
+<img src="/2020/05/13/简要分析一下cs起源/矩阵数据3.png">
+<p>然后至于其他值为什么变，是因为我鼠标在一直晃</p>
+<p>然后<code>F5</code>查找访问，找到了矩阵地址：<code>engine.dll+5ADBF8</code></p>
+<h5 id="矩阵参数讲解"><a href="#矩阵参数讲解" class="headerlink" title="矩阵参数讲解"></a>矩阵参数讲解</h5><p>使用矩阵，需要这么几个参数</p>
+<figure class="highlight tp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">三维XYZ坐标         这是一个结构体，包含小数型的XYZ三个变量</span><br><span class="line"></span><br><span class="line">矩阵数组(ViewWorld) 小数型 <span class="number">4</span>,<span class="number">4</span></span><br><span class="line"></span><br><span class="line">相机<span class="keyword">Z</span>               小数型</span><br><span class="line">缩放比例            小数型</span><br><span class="line"></span><br><span class="line">视角宽              小数型</span><br><span class="line">视角高              小数型</span><br><span class="line"></span><br><span class="line">相机<span class="keyword">X</span>               小数型</span><br><span class="line">相机<span class="keyword">Y</span>               小数型</span><br></pre></td></tr></table></figure>
+<p>下面先写一个公式，这是竖矩阵算法，至于横矩阵，可以通过调换公式中的数组位置实现，在这个游戏中用的是竖矩阵</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">相机<span class="selector-tag">Z</span> ＝ <span class="selector-tag">ViewWorld</span> <span class="selector-attr">[3]</span> <span class="selector-attr">[1]</span> × 三维<span class="selector-tag">XYZ</span>坐标<span class="selector-class">.X</span> ＋ <span class="selector-tag">ViewWorld</span> <span class="selector-attr">[3]</span> <span class="selector-attr">[2]</span> × 三维<span class="selector-tag">XYZ</span>坐标<span class="selector-class">.Y</span> ＋ <span class="selector-tag">ViewWorld</span> <span class="selector-attr">[3]</span> <span class="selector-attr">[3]</span> × 三维<span class="selector-tag">XYZ</span>坐标<span class="selector-class">.Z</span> ＋ <span class="selector-tag">ViewWorld</span> <span class="selector-attr">[3]</span> <span class="selector-attr">[4]</span></span><br><span class="line">    </span><br><span class="line">.如果真 (相机<span class="selector-tag">Z</span> ＜ 0)</span><br><span class="line">    到循环尾 ()</span><br><span class="line">.如果真结束</span><br><span class="line">	</span><br><span class="line">缩放比例 ＝ 1 ÷ 相机<span class="selector-tag">Z</span></span><br><span class="line">相机<span class="selector-tag">X</span> ＝ 视角宽 ＋ (<span class="selector-tag">ViewWorld</span> <span class="selector-attr">[1]</span> <span class="selector-attr">[1]</span> × 三维<span class="selector-tag">XYZ</span>坐标<span class="selector-class">.X</span> ＋ <span class="selector-tag">ViewWorld</span> <span class="selector-attr">[1]</span> <span class="selector-attr">[2]</span> × 三维<span class="selector-tag">XYZ</span>坐标<span class="selector-class">.Y</span> ＋ <span class="selector-tag">ViewWorld</span> <span class="selector-attr">[1]</span> <span class="selector-attr">[3]</span> × 三维<span class="selector-tag">XYZ</span>坐标<span class="selector-class">.Z</span> ＋ <span class="selector-tag">ViewWorld</span> <span class="selector-attr">[1]</span> <span class="selector-attr">[4]</span>) × 缩放比例 × 视角宽</span><br><span class="line">相机<span class="selector-tag">Y</span> ＝ 视角高 － (<span class="selector-tag">ViewWorld</span> <span class="selector-attr">[2]</span> <span class="selector-attr">[1]</span> × 三维<span class="selector-tag">XYZ</span>坐标<span class="selector-class">.X</span> ＋ <span class="selector-tag">ViewWorld</span> <span class="selector-attr">[2]</span> <span class="selector-attr">[2]</span> × 三维<span class="selector-tag">XYZ</span>坐标<span class="selector-class">.Y</span> ＋ <span class="selector-tag">ViewWorld</span> <span class="selector-attr">[2]</span> <span class="selector-attr">[3]</span> × 三维<span class="selector-tag">XYZ</span>坐标<span class="selector-class">.Z</span> ＋ <span class="selector-tag">ViewWorld</span> <span class="selector-attr">[2]</span> <span class="selector-attr">[4]</span>) × 缩放比例 × 视角高</span><br></pre></td></tr></table></figure>
+<p>下面讲解矩阵的参数</p>
+<figure class="highlight tp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">三维XYZ坐标：这是一个结构体，包含<span class="number">3</span>个小数型的<span class="keyword">X</span>，<span class="keyword">Y</span>，<span class="keyword">Z</span>；他是你要绘制对象的三维坐标</span><br><span class="line">矩阵数组(ViewWorld)：用来存放你上面ce出来的<span class="number">4</span>*<span class="number">4</span>的矩阵</span><br><span class="line">相机<span class="keyword">Z</span>：判断作用，当`相机<span class="keyword">Z</span>＜ <span class="number">0</span>`时表示你绘制的对象在你背后；如果你绘制的对象在你背后的情况下你仍然要绘制，就会得到虚像，所以这个时候需要判断</span><br><span class="line">缩放比例：这个参数用于计算，可加可不加，上面的公式会用到`缩放比例 ＝ <span class="number">1</span> ÷ 相机<span class="keyword">Z</span>`，你写成`相机<span class="keyword">Z</span> ＝ <span class="number">1</span> ÷ 相机<span class="keyword">Z</span>`也是可以的；但是加上之后会显得条理清晰</span><br><span class="line">视角宽：你的绘制窗口宽度 ÷ <span class="number">2</span></span><br><span class="line">视角高：你的绘制窗口高度 ÷ <span class="number">2</span></span><br><span class="line">相机<span class="keyword">X</span>：以你的绘制窗口的左上角为起点，横向是<span class="keyword">X</span>轴，相机<span class="keyword">X</span>是 三维转换到你屏幕二维 <span class="keyword">X</span>轴上的<span class="keyword">X</span>坐标</span><br><span class="line">相机<span class="keyword">Y</span>：以你的绘制窗口的左上角为起点，纵向是<span class="keyword">Y</span>轴，相机<span class="keyword">Y</span>是 三维转换到你屏幕二维 <span class="keyword">Y</span>轴上的<span class="keyword">Y</span>坐标</span><br><span class="line"></span><br><span class="line">所以：(三维XYZ坐标.<span class="keyword">X</span>,三维XYZ坐标.<span class="keyword">Y</span>,三维XYZ坐标.<span class="keyword">Z</span>) ---公式---&gt; (相机<span class="keyword">X</span>,相机<span class="keyword">Y</span>)</span><br></pre></td></tr></table></figure>
+<h5 id="使用矩阵"><a href="#使用矩阵" class="headerlink" title="使用矩阵"></a>使用矩阵</h5><p>上面找到了人物的XYZ接下来就可以画了，用<code>i</code>表示人数（粗略写法）</p>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">人物基址 = client.dll+<span class="number">4</span>F3FEC</span><br><span class="line"></span><br><span class="line">ReadProcessMemory_小数型 (进程句柄, 矩阵基址, ViewWorld [<span class="number">1</span>] [<span class="number">1</span>], <span class="number">64</span>, <span class="number">0</span>)  ' 获取矩阵</span><br><span class="line"></span><br><span class="line">视角宽 ＝ 窗口宽度 ÷ <span class="number">2</span></span><br><span class="line">视角高 ＝ 窗口高度 ÷ <span class="number">2</span></span><br><span class="line"></span><br><span class="line">.计次循环首 (<span class="number">19</span>, i)</span><br><span class="line">    对象地址 ＝ 读内存整数型 (PID, 人物基址 ＋ i × 进制_十六到十 (<span class="string">"10"</span>))</span><br><span class="line">    对象血量 ＝ 读内存整数型 (PID, 对象地址 ＋ 进制_十六到十 (<span class="string">"E4"</span>))</span><br><span class="line">    .如果真 (对象血量 ≤ <span class="number">1</span>)</span><br><span class="line">        到循环尾 ()</span><br><span class="line">    .如果真结束</span><br><span class="line">    对象坐标.X ＝ 读内存小数型 (PID, 对象地址 ＋ 进制_十六到十 (<span class="string">"280"</span>))</span><br><span class="line">    对象坐标.Y ＝ 读内存小数型 (PID, 对象地址 ＋ 进制_十六到十 (<span class="string">"284"</span>))</span><br><span class="line">    对象坐标.Z ＝ 读内存小数型 (PID, 对象地址 ＋ 进制_十六到十 (<span class="string">"288"</span>))</span><br><span class="line"></span><br><span class="line">    相机Z ＝ ViewWorld [<span class="number">3</span>] [<span class="number">1</span>] × 对象坐标.X ＋ ViewWorld [<span class="number">3</span>] [<span class="number">2</span>] × 对象坐标.Y ＋ ViewWorld [<span class="number">3</span>] [<span class="number">3</span>] × 对象坐标.Z ＋ ViewWorld [<span class="number">3</span>] [<span class="number">4</span>]</span><br><span class="line">    .如果真 (相机Z ＜ <span class="number">0</span>)</span><br><span class="line">        到循环尾 ()</span><br><span class="line">    .如果真结束</span><br><span class="line">    缩放比例 ＝ <span class="number">1</span> ÷ 相机Z</span><br><span class="line">    相机X ＝ 视角宽 ＋ (ViewWorld [<span class="number">1</span>] [<span class="number">1</span>] × 对象坐标.X ＋ ViewWorld [<span class="number">1</span>] [<span class="number">2</span>] × 对象坐标.Y ＋ ViewWorld [<span class="number">1</span>] [<span class="number">3</span>] × 对象坐标.Z ＋ ViewWorld [<span class="number">1</span>] [<span class="number">4</span>]) × 缩放比例 × 视角宽</span><br><span class="line">    相机Y ＝ 视角高 － (ViewWorld [<span class="number">2</span>] [<span class="number">1</span>] × 对象坐标.X ＋ ViewWorld [<span class="number">2</span>] [<span class="number">2</span>] × 对象坐标.Y ＋ ViewWorld [<span class="number">2</span>] [<span class="number">3</span>] × (对象坐标.Z ＋ <span class="number">75</span>) ＋ ViewWorld [<span class="number">2</span>] [<span class="number">4</span>]) × 缩放比例 × 视角高</span><br><span class="line">    相机Y2 ＝ 视角高 － (ViewWorld [<span class="number">2</span>] [<span class="number">1</span>] × 对象坐标.X ＋ ViewWorld [<span class="number">2</span>] [<span class="number">2</span>] × 对象坐标.Y ＋ ViewWorld [<span class="number">2</span>] [<span class="number">3</span>] × (对象坐标.Z － <span class="number">5</span>) ＋ ViewWorld [<span class="number">2</span>] [<span class="number">4</span>]) × 缩放比例 × 视角高</span><br><span class="line"></span><br><span class="line">    绘制矩形 (相机X － (相机Y2 － 相机Y) ÷ <span class="number">4</span>, 相机Y, (相机Y2 － 相机Y) ÷ <span class="number">2</span>, 相机Y2 － 相机Y, #白色, <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">.计次循环尾 ()</span><br></pre></td></tr></table></figure>
+<p>绘制出来是这个样子的：</p>
+<img src="/2020/05/13/简要分析一下cs起源/矩阵分析1.png">
+<h4 id="骨骼分析篇"><a href="#骨骼分析篇" class="headerlink" title="骨骼分析篇"></a>骨骼分析篇</h4><h5 id="找骨骼基址"><a href="#找骨骼基址" class="headerlink" title="找骨骼基址"></a>找骨骼基址</h5><p>我们得先明白，骨骼是什么，骨骼就是对象身上的一堆点</p>
+<p>我们知道自己的坐标，我们用自己的Z坐标，自己的XYZ坐标表示的是自己脚下的点，队友比我们高就搜索大于，比我们低就搜小于</p>
+<p>（这部分没截图）然后我们搜索出来了一堆数据，一直搜索直到大概4，5百个数据就行了，然后把相同的排除一下</p>
+<p>我都是看一直变动的点，因为随着人物呼吸，骨骼是一直动的，然后浏览内存区域</p>
+<p>下面这是个示例</p>
+<img src="/2020/05/13/简要分析一下cs起源/骨骼数据1.png">
+<p>可以发现XYZ相差<code>进制_十六到十(&quot;10&quot;)</code>，然后这个X和下个X相差<code>进制_十六到十(&quot;30&quot;)</code>，<code>353302F4-353302C4=30</code> 进制_十六到十(“30”)=48，请注意这只是个示例（相差<code>进制_十六到十(&quot;30&quot;)</code>），在实际找的过程中还有相差<code>进制_十六到十(&quot;4C&quot;)</code>的，我忘记截图了</p>
+<p>最上面的地址叫做，骨骼头地址，因为他是这一串骨骼数据的头，然后这个骨骼头的三维坐标：</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">X</span>=骨骼头地址</span><br><span class="line"><span class="attr">Y</span>=骨骼头地址 + 进制_十六到十(<span class="string">"10"</span>)</span><br><span class="line"><span class="attr">Z</span>=骨骼头地址 + 进制_十六到十(<span class="string">"20"</span>)</span><br></pre></td></tr></table></figure>
+<p>因为我们知道这个X和下个X相差<code>进制_十六到十(&quot;30&quot;)</code></p>
+<p>第一个X是<code>353302C4</code>，第二个是<code>353302F4</code>，然后就能写出一个循环,i是你想找的骨骼点的数量</p>
+<figure class="highlight nix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">当前骨骼点地址 = 进制_十六到十(<span class="string">"353302C4"</span>) + (i - <span class="number">1</span>) * 进制_十六到十(<span class="string">"30"</span>)</span><br><span class="line"></span><br><span class="line">当前骨骼点坐标.<span class="attr">X</span> = 对象坐标<span class="attr">X</span> = 读内存小数型(PID, 当前骨骼点地址)</span><br><span class="line"></span><br><span class="line">当前骨骼点坐标.<span class="attr">Y</span> = 对象坐标<span class="attr">X</span> = 读内存小数型(PID, 当前骨骼点地址 + 进制_十六到十(<span class="string">"10"</span>))</span><br><span class="line"></span><br><span class="line">当前骨骼点坐标.<span class="attr">Z</span> = 对象坐标<span class="attr">X</span> = 读内存小数型(PID, 当前骨骼点地址 + 进制_十六到十(<span class="string">"20"</span>))</span><br></pre></td></tr></table></figure>
+<p>然后我们完善这个代码，在屏幕上把这些骨骼点呈现出来（你找出来的不一定是这样，可以多找几个，我也是尝试了很多个，才选择了这个）（粗略写法）</p>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">ReadProcessMemory_小数型 (进程句柄, 矩阵基址, ViewWorld [<span class="number">1</span>] [<span class="number">1</span>], <span class="number">64</span>, <span class="number">0</span>)  ' 获取矩阵</span><br><span class="line"></span><br><span class="line">视角宽 ＝ 窗口宽度 ÷ <span class="number">2</span></span><br><span class="line">视角高 ＝ 窗口高度 ÷ <span class="number">2</span></span><br><span class="line"></span><br><span class="line">.计次循环首 (<span class="number">100</span>, i)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    当前骨骼点地址 = 进制_十六到十(<span class="string">"353302C4"</span>) + (i - <span class="number">1</span>) * 进制_十六到十(<span class="string">"30"</span>)</span><br><span class="line">    当前骨骼点坐标.X = 对象坐标X = 读内存小数型(PID, 当前骨骼点地址)</span><br><span class="line">    当前骨骼点坐标.Y = 对象坐标X = 读内存小数型(PID, 当前骨骼点地址 + 进制_十六到十(<span class="string">"10"</span>))</span><br><span class="line">    当前骨骼点坐标.Z = 对象坐标X = 读内存小数型(PID, 当前骨骼点地址 + 进制_十六到十(<span class="string">"20"</span>))</span><br><span class="line">	</span><br><span class="line">    相机Z ＝ ViewWorld [<span class="number">3</span>] [<span class="number">1</span>] × 当前骨骼点坐标.X ＋ ViewWorld [<span class="number">3</span>] [<span class="number">2</span>] × 当前骨骼点坐标.Y ＋ ViewWorld [<span class="number">3</span>] [<span class="number">3</span>] × 当前骨骼点坐标.Z ＋ ViewWorld [<span class="number">3</span>] [<span class="number">4</span>]</span><br><span class="line">        .如果真 (相机Z ＜ <span class="number">0</span>)</span><br><span class="line">            到循环尾 ()</span><br><span class="line">        .如果真结束</span><br><span class="line">        缩放比例 ＝ <span class="number">1</span> ÷ 相机Z</span><br><span class="line">        相机X ＝ 视角宽 ＋ (ViewWorld [<span class="number">1</span>] [<span class="number">1</span>] × 当前骨骼点坐标.X ＋ ViewWorld [<span class="number">1</span>] [<span class="number">2</span>] × 当前骨骼点坐标.Y ＋ ViewWorld [<span class="number">1</span>] [<span class="number">3</span>] × 当前骨骼点坐标.Z ＋ ViewWorld [<span class="number">1</span>] [<span class="number">4</span>]) × 缩放比例 × 视角宽</span><br><span class="line">        相机Y ＝ 视角高 － (ViewWorld [<span class="number">2</span>] [<span class="number">1</span>] × 当前骨骼点坐标.X ＋ ViewWorld [<span class="number">2</span>] [<span class="number">2</span>] × 当前骨骼点坐标.Y ＋ ViewWorld [<span class="number">2</span>] [<span class="number">3</span>] × 当前骨骼点坐标.Z ＋ ViewWorld [<span class="number">2</span>] [<span class="number">4</span>]) × 缩放比例 × 视角高</span><br><span class="line"></span><br><span class="line">    绘制文本 (相机X, 相机Y, 到文本 (i － <span class="number">1</span>), #红色)</span><br></pre></td></tr></table></figure>
+<p>绘制出来是这个样子的：</p>
+<img src="/2020/05/13/简要分析一下cs起源/骨骼绘制效果1.png">
+<img src="/2020/05/13/简要分析一下cs起源/骨骼绘制效果2.png">
+<p>接下来呢，我们来分析这个基址，如下图所示，这个截图是有错误的，第2步和第3步中间是少了一步的，应该是从第二步先查找访问<code>353302C4</code>，然后发现了<code>386EB2E8</code>，然后查找访问<code>386EB2E8</code>得到了第3步的结果</p>
+<img src="/2020/05/13/简要分析一下cs起源/骨骼分析1.png">
+<p>我们按照上图得到了’7C623914’,然后把’7C623914’拉下来</p>
+<img src="/2020/05/13/简要分析一下cs起源/骨骼分析2.png">
+<p>然后我们对’7C623914’查找访问，得到了一堆数组</p>
+<img src="/2020/05/13/简要分析一下cs起源/骨骼分析3.png">
+<p>然后你点一点就会发现 他是不断+4排列的数组，所以我就找了第一个<u>没+4的</u><code>7C1E553C</code>，从他开始每个+4</p>
+<p>从截图的详细信息中你可以发现<code>ECX=00000004</code>，然后看下操作，他是<code>mov edx,[eax+ecx*8+04]</code>，下一个是<code>mov edi,[edx+eax*8+04]</code></p>
+<p>所以我们需要知道第一个的<code>EAX</code>是怎么来的，所以搜一下<code>7C6238F0</code>，然后得到了两个基址<code>7C5E8558</code>和<code>7C5E855C</code></p>
+<img src="/2020/05/13/简要分析一下cs起源/骨骼分析4.png">
+<p>我选了第一个，至于为什么选第一个，这个看情况，具体是为什么时间太久了我也忘了，你可以自己想想分析分析</p>
+<p>然后把第一个拉下来，就可以看见基址了：<code>client.dll+498558</code></p>
+<img src="/2020/05/13/简要分析一下cs起源/骨骼分析5.png">
+<p>然后下面梳理一下，这是一个梳理的图</p>
+<img src="/2020/05/13/简要分析一下cs起源/骨骼分析6.png">
+<p>所以游戏中的骨骼地址就是：</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">骨骼地址 = [[[client.dll+<span class="number">498558</span>] + <span class="number">4</span> * <span class="number">8</span> + <span class="number">4</span>] + <span class="number">578</span>] + <span class="number">0</span> ]</span><br></pre></td></tr></table></figure>
+<p>但是你会发现你得到的这个和上面的<code>353302C4</code>相差了<code>进制_十六到十(&quot;C&quot;)</code></p>
+<p>所以游戏中的骨骼头地址就是：</p>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">骨骼头地址 = [[[client.dll+<span class="number">498558</span>] + <span class="number">4</span> * <span class="number">8</span> + <span class="number">4</span>] + <span class="number">578</span>] + <span class="number">0</span> ] + 进制_十六到十(<span class="string">"C"</span>)</span><br></pre></td></tr></table></figure>
+<p>注意：骨骼地址不是骨骼头地址，他们相差了<code>进制_十六到十(&quot;C&quot;)</code></p>
+<p>然后我们绘制一下这个（粗略写法）</p>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">骨骼基址 ＝ client.dll+<span class="number">498558</span></span><br><span class="line"></span><br><span class="line">ReadProcessMemory_小数型 (进程句柄, 矩阵基址, ViewWorld [<span class="number">1</span>] [<span class="number">1</span>], <span class="number">64</span>, <span class="number">0</span>)  ' 获取矩阵</span><br><span class="line"></span><br><span class="line">视角宽 ＝ 窗口宽度 ÷ <span class="number">2</span></span><br><span class="line">视角高 ＝ 窗口高度 ÷ <span class="number">2</span></span><br><span class="line"></span><br><span class="line">.计次循环首 (<span class="number">100</span>, i)</span><br><span class="line"></span><br><span class="line">    当前骨骼点地址 ＝ 读内存整数型 (PID, 读内存整数型 (PID, 读内存整数型 (PID, 骨骼基址) ＋ <span class="number">4</span> × <span class="number">8</span> ＋ <span class="number">4</span>) ＋ 进制_十六到十 (<span class="string">"578"</span>)) ＋ (i － <span class="number">1</span>) × 进制_十六到十 (<span class="string">"30"</span>) ＋ 进制_十六到十(<span class="string">"C"</span>)</span><br><span class="line">    当前骨骼点坐标.X ＝ 读内存小数型 (PID, 当前骨骼点地址)</span><br><span class="line">    当前骨骼点坐标.Y ＝ 读内存小数型 (PID, 当前骨骼点地址 ＋ 进制_十六到十(<span class="string">"10"</span>))</span><br><span class="line">    当前骨骼点坐标.Z ＝ 读内存小数型 (PID, 当前骨骼点地址 ＋ 进制_十六到十(<span class="string">"20"</span>))</span><br><span class="line"></span><br><span class="line">    相机Z ＝ ViewWorld [<span class="number">3</span>] [<span class="number">1</span>] × 当前骨骼点坐标.X ＋ ViewWorld [<span class="number">3</span>] [<span class="number">2</span>] × 当前骨骼点坐标.Y ＋ ViewWorld [<span class="number">3</span>] [<span class="number">3</span>] × 当前骨骼点坐标.Z ＋ ViewWorld [<span class="number">3</span>] [<span class="number">4</span>]</span><br><span class="line">        .如果真 (相机Z ＜ <span class="number">0</span>)</span><br><span class="line">            到循环尾 ()</span><br><span class="line">        .如果真结束</span><br><span class="line">        缩放比例 ＝ <span class="number">1</span> ÷ 相机Z</span><br><span class="line">        相机X ＝ 视角宽 ＋ (ViewWorld [<span class="number">1</span>] [<span class="number">1</span>] × 当前骨骼点坐标.X ＋ ViewWorld [<span class="number">1</span>] [<span class="number">2</span>] × 当前骨骼点坐标.Y ＋ ViewWorld [<span class="number">1</span>] [<span class="number">3</span>] × 当前骨骼点坐标.Z ＋ ViewWorld [<span class="number">1</span>] [<span class="number">4</span>]) × 缩放比例 × 视角宽</span><br><span class="line">        相机Y ＝ 视角高 － (ViewWorld [<span class="number">2</span>] [<span class="number">1</span>] × 当前骨骼点坐标.X ＋ ViewWorld [<span class="number">2</span>] [<span class="number">2</span>] × 当前骨骼点坐标.Y ＋ ViewWorld [<span class="number">2</span>] [<span class="number">3</span>] × 当前骨骼点坐标.Z ＋ ViewWorld [<span class="number">2</span>] [<span class="number">4</span>]) × 缩放比例 × 视角高</span><br><span class="line"></span><br><span class="line">    绘制文本 (相机X, 相机Y, 到文本 (i － <span class="number">1</span>), #红色)</span><br><span class="line"></span><br><span class="line">.计次循环尾 ()</span><br></pre></td></tr></table></figure>
+<img src="/2020/05/13/简要分析一下cs起源/骨骼分析7.png">
+<p>接下来我们分析下一个敌人的骨骼</p>
+<p>之前我们拿到了矩阵的那个数组，然后第一个人是<code>4*8+4</code>，经过实验可以发现第二个人是<code>6*8+4</code>,第三个人是<code>8*8+4</code></p>
+<p>所以得出第i个人的骨骼头地址是：</p>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">骨骼头地址 = [[[client.dll+<span class="number">498558</span>] + (<span class="number">4</span> + (i - <span class="number">1</span>) * <span class="number">2</span>) * <span class="number">8</span> + <span class="number">4</span>] + <span class="number">578</span>] + <span class="number">0</span> ] + 进制_十六到十(<span class="string">"C"</span>)</span><br></pre></td></tr></table></figure>
+<p>接下来我们绘制所有人的骨骼点（我加入了血量判断，如果不加绘制会很卡卡卡卡卡）（粗略写法）</p>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">骨骼基址 ＝ client.dll+<span class="number">498558</span></span><br><span class="line">人物基址 ＝ client.dll+<span class="number">4</span>F3FEC</span><br><span class="line"></span><br><span class="line">ReadProcessMemory_小数型 (进程句柄, 矩阵基址, ViewWorld [<span class="number">1</span>] [<span class="number">1</span>], <span class="number">64</span>, <span class="number">0</span>)  ' 获取矩阵</span><br><span class="line"></span><br><span class="line">视角宽 ＝ 窗口宽度 ÷ <span class="number">2</span></span><br><span class="line">视角高 ＝ 窗口高度 ÷ <span class="number">2</span></span><br><span class="line"></span><br><span class="line">.计次循环首 (<span class="number">19</span>, i)</span><br><span class="line"></span><br><span class="line">    对象地址 ＝ 读内存整数型 (PID, 人物基址 ＋ i × 进制_十六到十 (<span class="string">"10"</span>))</span><br><span class="line">    对象血量 ＝ 读内存整数型 (PID, 对象地址 ＋ 进制_十六到十 (<span class="string">"E4"</span>))</span><br><span class="line">    .如果真 (对象血量 ≤ <span class="number">1</span>)</span><br><span class="line">        到循环尾 ()</span><br><span class="line">    .如果真结束</span><br><span class="line">	</span><br><span class="line">	骨骼头地址 ＝ 读内存整数型 (PID, 读内存整数型 (PID, 读内存整数型 (PID, 骨骼基址) ＋ (<span class="number">4</span> ＋ (i － <span class="number">1</span>) × <span class="number">2</span>) × <span class="number">8</span> ＋ <span class="number">4</span>) ＋ 进制_十六到十 (<span class="string">"578"</span>)) ＋ 进制_十六到十(<span class="string">"C"</span>)</span><br><span class="line">	</span><br><span class="line">    .计次循环首 (<span class="number">100</span>, j)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        当前骨骼点地址 ＝ 骨骼头地址 ＋ (j － <span class="number">1</span>) × 进制_十六到十(<span class="string">"30"</span>)</span><br><span class="line"></span><br><span class="line">        当前骨骼点坐标.X ＝ 读内存小数型 (PID, 当前骨骼点地址)</span><br><span class="line">        当前骨骼点坐标.Y ＝ 读内存小数型 (PID, 当前骨骼点地址 ＋ 进制_十六到十(<span class="string">"10"</span>))</span><br><span class="line">        当前骨骼点坐标.Z ＝ 读内存小数型 (PID, 当前骨骼点地址 ＋ 进制_十六到十(<span class="string">"20"</span>))</span><br><span class="line"></span><br><span class="line">        相机Z ＝ ViewWorld [<span class="number">3</span>] [<span class="number">1</span>] × 当前骨骼点坐标.X ＋ ViewWorld [<span class="number">3</span>] [<span class="number">2</span>] × 当前骨骼点坐标.Y ＋ ViewWorld [<span class="number">3</span>] [<span class="number">3</span>] × 当前骨骼点坐标.Z ＋ ViewWorld [<span class="number">3</span>] [<span class="number">4</span>]</span><br><span class="line">        .如果真 (相机Z ＜ <span class="number">0</span>)</span><br><span class="line">            到循环尾 ()</span><br><span class="line">        .如果真结束</span><br><span class="line">        缩放比例 ＝ <span class="number">1</span> ÷ 相机Z</span><br><span class="line">        相机X ＝ 视角宽 ＋ (ViewWorld [<span class="number">1</span>] [<span class="number">1</span>] × 当前骨骼点坐标.X ＋ ViewWorld [<span class="number">1</span>] [<span class="number">2</span>] × 当前骨骼点坐标.Y ＋ ViewWorld [<span class="number">1</span>] [<span class="number">3</span>] × 当前骨骼点坐标.Z ＋ ViewWorld [<span class="number">1</span>] [<span class="number">4</span>]) × 缩放比例 × 视角宽</span><br><span class="line">        相机Y ＝ 视角高 － (ViewWorld [<span class="number">2</span>] [<span class="number">1</span>] × 当前骨骼点坐标.X ＋ ViewWorld [<span class="number">2</span>] [<span class="number">2</span>] × 当前骨骼点坐标.Y ＋ ViewWorld [<span class="number">2</span>] [<span class="number">3</span>] × 当前骨骼点坐标.Z ＋ ViewWorld [<span class="number">2</span>] [<span class="number">4</span>]) × 缩放比例 × 视角高</span><br><span class="line"></span><br><span class="line">        绘制文本 (相机X, 相机Y, 到文本 (j － <span class="number">1</span>), #红色)</span><br><span class="line"></span><br><span class="line">    .计次循环尾 ()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">.计次循环尾 ()</span><br></pre></td></tr></table></figure>
+<p>绘制出来是这个样子的：</p>
+<img src="/2020/05/13/简要分析一下cs起源/骨骼分析8.png">
+<img src="/2020/05/13/简要分析一下cs起源/骨骼分析9.png">
+<h5 id="绘制骨骼"><a href="#绘制骨骼" class="headerlink" title="绘制骨骼"></a>绘制骨骼</h5><p>然后绘制骨骼，先说下思路，，你仔细观察下面这个骨骼，找一找合适的点，准备把他们连成线，就形成了身体骨骼；然后以头为圆心画一个圆，就形成了头的骨骼</p>
+<img src="/2020/05/13/简要分析一下cs起源/骨骼分析10.png">
+<p>由此分析，所以我们需要两个函数：</p>
+<p>1：绘制骨骼直线，包含两个参数：开始点，结束点<br>2：绘制骨骼圆形，包含一个参数：圆心</p>
+<p>下面是绘制骨骼直线的代码：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">.版本 2</span><br><span class="line"></span><br><span class="line">.子程序 绘制骨骼直线</span><br><span class="line">.参数 <span class="selector-tag">ViewWorld</span>, 小数型, 数组</span><br><span class="line">.参数 骨骼头地址, 整数型</span><br><span class="line">.参数 开始点, 整数型</span><br><span class="line">.参数 结束点, 整数型</span><br><span class="line">.局部变量 骨骼坐标, <span class="selector-tag">D3D</span>坐标</span><br><span class="line">.局部变量 开始<span class="selector-tag">X</span>, 小数型</span><br><span class="line">.局部变量 开始<span class="selector-tag">Y</span>, 小数型</span><br><span class="line">.局部变量 结束<span class="selector-tag">X</span>, 小数型</span><br><span class="line">.局部变量 结束<span class="selector-tag">Y</span>, 小数型</span><br><span class="line">.局部变量 相机<span class="selector-tag">Z</span>, 小数型</span><br><span class="line">.局部变量 缩放比例, 小数型</span><br><span class="line">.局部变量 开始骨骼地址, 整数型</span><br><span class="line">.局部变量 结束骨骼地址, 整数型</span><br><span class="line"></span><br><span class="line">开始骨骼地址 ＝ 骨骼头地址 ＋ 开始点 × 进制_十六到十 ("30") </span><br><span class="line">骨骼坐标<span class="selector-class">.X</span> ＝ 读内存小数型 (<span class="selector-tag">PID</span>, 开始骨骼地址)</span><br><span class="line">骨骼坐标<span class="selector-class">.Y</span> ＝ 读内存小数型 (<span class="selector-tag">PID</span>, 开始骨骼地址 ＋ 进制_十六到十 ("284"))</span><br><span class="line">骨骼坐标<span class="selector-class">.Z</span> ＝ 读内存小数型 (<span class="selector-tag">PID</span>, 开始骨骼地址 ＋ 进制_十六到十 ("288"))</span><br><span class="line">相机<span class="selector-tag">Z</span> ＝ <span class="selector-tag">ViewWorld</span> <span class="selector-attr">[3]</span> <span class="selector-attr">[1]</span> × 骨骼坐标<span class="selector-class">.X</span> ＋ <span class="selector-tag">ViewWorld</span> <span class="selector-attr">[3]</span> <span class="selector-attr">[2]</span> × 骨骼坐标<span class="selector-class">.Y</span> ＋ <span class="selector-tag">ViewWorld</span> <span class="selector-attr">[3]</span> <span class="selector-attr">[3]</span> × 骨骼坐标<span class="selector-class">.Z</span> ＋ <span class="selector-tag">ViewWorld</span> <span class="selector-attr">[3]</span> <span class="selector-attr">[4]</span></span><br><span class="line">缩放比例 ＝ 1 ÷ 相机<span class="selector-tag">Z</span></span><br><span class="line">.如果真 (相机<span class="selector-tag">Z</span> ＜ 0)</span><br><span class="line">    返回 ()</span><br><span class="line">.如果真结束</span><br><span class="line">开始<span class="selector-tag">X</span> ＝ 视角宽 ＋ (<span class="selector-tag">ViewWorld</span> <span class="selector-attr">[1]</span> <span class="selector-attr">[1]</span> × 骨骼坐标<span class="selector-class">.X</span> ＋ <span class="selector-tag">ViewWorld</span> <span class="selector-attr">[1]</span> <span class="selector-attr">[2]</span> × 骨骼坐标<span class="selector-class">.Y</span> ＋ <span class="selector-tag">ViewWorld</span> <span class="selector-attr">[1]</span> <span class="selector-attr">[3]</span> × 骨骼坐标<span class="selector-class">.Z</span> ＋ <span class="selector-tag">ViewWorld</span> <span class="selector-attr">[1]</span> <span class="selector-attr">[4]</span>) × 缩放比例 × 视角宽</span><br><span class="line">开始<span class="selector-tag">Y</span> ＝ 视角高 － (<span class="selector-tag">ViewWorld</span> <span class="selector-attr">[2]</span> <span class="selector-attr">[1]</span> × 骨骼坐标<span class="selector-class">.X</span> ＋ <span class="selector-tag">ViewWorld</span> <span class="selector-attr">[2]</span> <span class="selector-attr">[2]</span> × 骨骼坐标<span class="selector-class">.Y</span> ＋ <span class="selector-tag">ViewWorld</span> <span class="selector-attr">[2]</span> <span class="selector-attr">[3]</span> × 骨骼坐标<span class="selector-class">.Z</span> ＋ <span class="selector-tag">ViewWorld</span> <span class="selector-attr">[2]</span> <span class="selector-attr">[4]</span>) × 缩放比例 × 视角高</span><br><span class="line">结束骨骼地址 ＝ 骨骼头地址 ＋ 结束点 × 进制_十六到十 ("30")</span><br><span class="line">骨骼坐标<span class="selector-class">.X</span> ＝ 读内存小数型 (<span class="selector-tag">PID</span>, 结束骨骼地址)</span><br><span class="line">骨骼坐标<span class="selector-class">.Y</span> ＝ 读内存小数型 (<span class="selector-tag">PID</span>, 结束骨骼地址 ＋ 进制_十六到十 ("284"))</span><br><span class="line">骨骼坐标<span class="selector-class">.Z</span> ＝ 读内存小数型 (<span class="selector-tag">PID</span>, 结束骨骼地址 ＋ 进制_十六到十 ("288"))</span><br><span class="line">相机<span class="selector-tag">Z</span> ＝ <span class="selector-tag">ViewWorld</span> <span class="selector-attr">[3]</span> <span class="selector-attr">[1]</span> × 骨骼坐标<span class="selector-class">.X</span> ＋ <span class="selector-tag">ViewWorld</span> <span class="selector-attr">[3]</span> <span class="selector-attr">[2]</span> × 骨骼坐标<span class="selector-class">.Y</span> ＋ <span class="selector-tag">ViewWorld</span> <span class="selector-attr">[3]</span> <span class="selector-attr">[3]</span> × 骨骼坐标<span class="selector-class">.Z</span> ＋ <span class="selector-tag">ViewWorld</span> <span class="selector-attr">[3]</span> <span class="selector-attr">[4]</span></span><br><span class="line">缩放比例 ＝ 1 ÷ 相机<span class="selector-tag">Z</span></span><br><span class="line">.如果真 (相机<span class="selector-tag">Z</span> ＜ 0)</span><br><span class="line">    返回 ()</span><br><span class="line">.如果真结束</span><br><span class="line">结束<span class="selector-tag">X</span> ＝ 视角宽 ＋ (<span class="selector-tag">ViewWorld</span> <span class="selector-attr">[1]</span> <span class="selector-attr">[1]</span> × 骨骼坐标<span class="selector-class">.X</span> ＋ <span class="selector-tag">ViewWorld</span> <span class="selector-attr">[1]</span> <span class="selector-attr">[2]</span> × 骨骼坐标<span class="selector-class">.Y</span> ＋ <span class="selector-tag">ViewWorld</span> <span class="selector-attr">[1]</span> <span class="selector-attr">[3]</span> × 骨骼坐标<span class="selector-class">.Z</span> ＋ <span class="selector-tag">ViewWorld</span> <span class="selector-attr">[1]</span> <span class="selector-attr">[4]</span>) × 缩放比例 × 视角宽</span><br><span class="line">结束<span class="selector-tag">Y</span> ＝ 视角高 － (<span class="selector-tag">ViewWorld</span> <span class="selector-attr">[2]</span> <span class="selector-attr">[1]</span> × 骨骼坐标<span class="selector-class">.X</span> ＋ <span class="selector-tag">ViewWorld</span> <span class="selector-attr">[2]</span> <span class="selector-attr">[2]</span> × 骨骼坐标<span class="selector-class">.Y</span> ＋ <span class="selector-tag">ViewWorld</span> <span class="selector-attr">[2]</span> <span class="selector-attr">[3]</span> × 骨骼坐标<span class="selector-class">.Z</span> ＋ <span class="selector-tag">ViewWorld</span> <span class="selector-attr">[2]</span> <span class="selector-attr">[4]</span>) × 缩放比例 × 视角高</span><br><span class="line">绘制直线 (开始<span class="selector-tag">X</span>, 开始<span class="selector-tag">Y</span>, 结束<span class="selector-tag">X</span>, 结束<span class="selector-tag">Y</span>, 2, #白色)</span><br></pre></td></tr></table></figure>
+<p>下面是绘制骨骼圆形的代码：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">.版本 2</span><br><span class="line"></span><br><span class="line">.子程序 绘制骨骼圆形</span><br><span class="line">.参数 <span class="selector-tag">ViewWorld</span>, 小数型, 数组</span><br><span class="line">.参数 骨骼头地址, 整数型</span><br><span class="line">.参数 头部点, 整数型</span><br><span class="line">.局部变量 骨骼坐标, <span class="selector-tag">D3D</span>坐标</span><br><span class="line">.局部变量 相机<span class="selector-tag">Z</span>, 小数型</span><br><span class="line">.局部变量 头部<span class="selector-tag">X</span>, 小数型</span><br><span class="line">.局部变量 头部<span class="selector-tag">Y</span>, 小数型</span><br><span class="line">.局部变量 头部<span class="selector-tag">Y2</span>, 小数型</span><br><span class="line">.局部变量 缩放比例, 小数型</span><br><span class="line"></span><br><span class="line">骨骼头地址 ＝ 骨骼头地址 ＋ 头部点 × 进制_十六到十 ("30")</span><br><span class="line">骨骼坐标<span class="selector-class">.X</span> ＝ 读内存小数型 (<span class="selector-tag">PID</span>, 骨骼头地址)</span><br><span class="line">骨骼坐标<span class="selector-class">.Y</span> ＝ 读内存小数型 (<span class="selector-tag">PID</span>, 骨骼头地址 ＋ 进制_十六到十 ("284"))</span><br><span class="line">骨骼坐标<span class="selector-class">.Z</span> ＝ 读内存小数型 (<span class="selector-tag">PID</span>, 骨骼头地址 ＋ 进制_十六到十 ("288"))</span><br><span class="line">相机<span class="selector-tag">Z</span> ＝ <span class="selector-tag">ViewWorld</span> <span class="selector-attr">[3]</span> <span class="selector-attr">[1]</span> × 骨骼坐标<span class="selector-class">.X</span> ＋ <span class="selector-tag">ViewWorld</span> <span class="selector-attr">[3]</span> <span class="selector-attr">[2]</span> × 骨骼坐标<span class="selector-class">.Y</span> ＋ <span class="selector-tag">ViewWorld</span> <span class="selector-attr">[3]</span> <span class="selector-attr">[3]</span> × 骨骼坐标<span class="selector-class">.Z</span> ＋ <span class="selector-tag">ViewWorld</span> <span class="selector-attr">[3]</span> <span class="selector-attr">[4]</span></span><br><span class="line">缩放比例 ＝ 1 ÷ 相机<span class="selector-tag">Z</span></span><br><span class="line">.如果真 (相机<span class="selector-tag">Z</span> ＜ 0)</span><br><span class="line">    返回 ()</span><br><span class="line">.如果真结束</span><br><span class="line">头部<span class="selector-tag">X</span> ＝ 视角宽 ＋ (<span class="selector-tag">ViewWorld</span> <span class="selector-attr">[1]</span> <span class="selector-attr">[1]</span> × 骨骼坐标<span class="selector-class">.X</span> ＋ <span class="selector-tag">ViewWorld</span> <span class="selector-attr">[1]</span> <span class="selector-attr">[2]</span> × 骨骼坐标<span class="selector-class">.Y</span> ＋ <span class="selector-tag">ViewWorld</span> <span class="selector-attr">[1]</span> <span class="selector-attr">[3]</span> × 骨骼坐标<span class="selector-class">.Z</span> ＋ <span class="selector-tag">ViewWorld</span> <span class="selector-attr">[1]</span> <span class="selector-attr">[4]</span>) × 缩放比例 × 视角宽</span><br><span class="line">头部<span class="selector-tag">Y</span> ＝ 视角高 － (<span class="selector-tag">ViewWorld</span> <span class="selector-attr">[2]</span> <span class="selector-attr">[1]</span> × 骨骼坐标<span class="selector-class">.X</span> ＋ <span class="selector-tag">ViewWorld</span> <span class="selector-attr">[2]</span> <span class="selector-attr">[2]</span> × 骨骼坐标<span class="selector-class">.Y</span> ＋ <span class="selector-tag">ViewWorld</span> <span class="selector-attr">[2]</span> <span class="selector-attr">[3]</span> × (骨骼坐标<span class="selector-class">.Z</span> ＋ 1) ＋ <span class="selector-tag">ViewWorld</span> <span class="selector-attr">[2]</span> <span class="selector-attr">[4]</span>) × 缩放比例 × 视角高</span><br><span class="line">头部<span class="selector-tag">Y2</span> ＝ 视角高 － (<span class="selector-tag">ViewWorld</span> <span class="selector-attr">[2]</span> <span class="selector-attr">[1]</span> × 骨骼坐标<span class="selector-class">.X</span> ＋ <span class="selector-tag">ViewWorld</span> <span class="selector-attr">[2]</span> <span class="selector-attr">[2]</span> × 骨骼坐标<span class="selector-class">.Y</span> ＋ <span class="selector-tag">ViewWorld</span> <span class="selector-attr">[2]</span> <span class="selector-attr">[3]</span> × (骨骼坐标<span class="selector-class">.Z</span> ＋ 11) ＋ <span class="selector-tag">ViewWorld</span> <span class="selector-attr">[2]</span> <span class="selector-attr">[4]</span>) × 缩放比例 × 视角高</span><br><span class="line">绘制圆形 (头部<span class="selector-tag">X</span>, 头部<span class="selector-tag">Y</span>, (头部<span class="selector-tag">Y</span> － 头部<span class="selector-tag">Y2</span>) ÷ 2, 60, 2, #白色)</span><br></pre></td></tr></table></figure>
+<p>然后通过调用这个函数，我们就可以绘制出骨骼了：（粗略写法）</p>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">ReadProcessMemory_小数型 (进程句柄, 矩阵基址, ViewWorld [<span class="number">1</span>] [<span class="number">1</span>], <span class="number">64</span>, <span class="number">0</span>)  ' 获取矩阵</span><br><span class="line"></span><br><span class="line">视角宽 ＝ 窗口宽度 ÷ <span class="number">2</span></span><br><span class="line">视角高 ＝ 窗口高度 ÷ <span class="number">2</span></span><br><span class="line"></span><br><span class="line">.计次循环首 (<span class="number">19</span>, i)</span><br><span class="line">    对象地址 ＝ 读内存整数型 (PID, 人物基址 ＋ i × 进制_十六到十 (<span class="string">"10"</span>))</span><br><span class="line">    对象血量 ＝ 读内存整数型 (PID, 对象地址 ＋ 进制_十六到十 (<span class="string">"E4"</span>))</span><br><span class="line">    .如果真 (对象血量 ≤ <span class="number">1</span>)</span><br><span class="line">        到循环尾 ()</span><br><span class="line"></span><br><span class="line">    .如果真结束</span><br><span class="line">    骨骼头地址 ＝ 读内存整数型 (PID, 读内存整数型 (PID, 读内存整数型 (PID, 骨骼基址) ＋ (<span class="number">4</span> ＋ (i － <span class="number">1</span>) × <span class="number">2</span>) × <span class="number">8</span> ＋ <span class="number">4</span>) ＋ 进制_十六到十 (<span class="string">"578"</span>)) ＋ 进制_十六到十(<span class="string">"30"</span>)</span><br><span class="line"></span><br><span class="line">    绘制骨骼直线 (ViewWorld, 骨骼头地址, <span class="number">3</span>, <span class="number">2</span>)</span><br><span class="line">    绘制骨骼直线 (ViewWorld, 骨骼头地址, <span class="number">2</span>, <span class="number">0</span>)  ' 左腿</span><br><span class="line"></span><br><span class="line">    绘制骨骼直线 (ViewWorld, 骨骼头地址, <span class="number">7</span>, <span class="number">6</span>)</span><br><span class="line">    绘制骨骼直线 (ViewWorld, 骨骼头地址, <span class="number">6</span>, <span class="number">0</span>)  ' 右腿</span><br><span class="line"></span><br><span class="line">    绘制骨骼直线 (ViewWorld, 骨骼头地址, <span class="number">16</span>, <span class="number">17</span>)</span><br><span class="line">    绘制骨骼直线 (ViewWorld, 骨骼头地址, <span class="number">17</span>, <span class="number">18</span>)  ' 左胳膊</span><br><span class="line"></span><br><span class="line">    绘制骨骼直线 (ViewWorld, 骨骼头地址, <span class="number">16</span>, <span class="number">29</span>)</span><br><span class="line">    绘制骨骼直线 (ViewWorld, 骨骼头地址, <span class="number">0</span>, <span class="number">15</span>)  ' 胸和脊柱</span><br><span class="line"></span><br><span class="line">    绘制骨骼直线 (ViewWorld, 骨骼头地址, <span class="number">29</span>, <span class="number">30</span>)</span><br><span class="line">    绘制骨骼直线 (ViewWorld, 骨骼头地址, <span class="number">30</span>, <span class="number">31</span>)  ' 右胳膊</span><br><span class="line"></span><br><span class="line">    绘制骨骼圆形 (ViewWorld, 骨骼头地址, <span class="number">14</span>)</span><br><span class="line"></span><br><span class="line">.计次循环尾 ()</span><br></pre></td></tr></table></figure>
+<p>绘制出来是这个样子的：</p>
+<img src="/2020/05/13/简要分析一下cs起源/骨骼分析11.png">
+<p>加上方框以后是这个效果：</p>
+<img src="/2020/05/13/简要分析一下cs起源/骨骼分析12.png">
+<h4 id="自瞄篇"><a href="#自瞄篇" class="headerlink" title="自瞄篇"></a>自瞄篇</h4><p>原理很简单，计算自己鼠标到自瞄部位的角度，写到鼠标内存中就好了</p>
+<h5 id="找鼠标基址"><a href="#找鼠标基址" class="headerlink" title="找鼠标基址"></a>找鼠标基址</h5><p>鼠标基址是最好找的，鼠标抬到最上面搜浮点数-89，压到最下面搜89浮点数，就搜索出来了</p>
+<p>鼠标基址的坐标分X和Y，横向是X，纵向是Y</p>
+<figure class="highlight coq"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">鼠标基址X ＝ 引擎类 ＋ 进制<span class="keyword">_</span>十六到十 (<span class="string">"4791B4"</span>)</span><br><span class="line">鼠标基址Y ＝ 引擎类 ＋ 进制<span class="keyword">_</span>十六到十 (<span class="string">"4791B4"</span>) ＋ <span class="number">4</span></span><br></pre></td></tr></table></figure>
+<p>接下来就是自瞄计算的步骤了，我写一个自瞄+透视+骨骼的源码，自瞄计算可以看下面的”骨骼自瞄算法”（粗略写法）</p>
+<p>在白圈内按左键激活自瞄 ，判断谁离准星近瞄谁</p>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br></pre></td><td class="code"><pre><span class="line">.版本 <span class="number">2</span></span><br><span class="line"></span><br><span class="line">.子程序 循环绘制</span><br><span class="line">.局部变量 ViewWorld, 小数型, , <span class="string">"4,4"</span></span><br><span class="line">.局部变量 二维坐标, 三维转二维的屏幕坐标</span><br><span class="line">.局部变量 相机X, 小数型</span><br><span class="line">.局部变量 相机Y, 小数型</span><br><span class="line">.局部变量 相机Y2, 小数型</span><br><span class="line">.局部变量 相机Z, 小数型</span><br><span class="line">.局部变量 缩放比例, 小数型</span><br><span class="line">.局部变量 i, 整数型</span><br><span class="line">.局部变量 自己地址, 整数型</span><br><span class="line">.局部变量 对象地址, 整数型</span><br><span class="line">.局部变量 对象血量, 整数型</span><br><span class="line">.局部变量 骨骼头地址, 整数型</span><br><span class="line">.局部变量 对象坐标, D3D坐标</span><br><span class="line">.局部变量 自己坐标, D3D坐标</span><br><span class="line">.局部变量 自瞄最大距离, 整数型</span><br><span class="line">.局部变量 准星自瞄距离, 小数型</span><br><span class="line">.局部变量 自瞄部位坐标, D3D坐标</span><br><span class="line">.局部变量 二维自瞄坐标, D2D坐标</span><br><span class="line">.局部变量 最近自瞄对象骨骼点地址, 整数型</span><br><span class="line">.局部变量 自瞄部位骨骼地址, 整数型</span><br><span class="line">.局部变量 自瞄鼠标, D2D坐标</span><br><span class="line"></span><br><span class="line">ReadProcessMemory_小数型 (进程句柄, 矩阵基址, ViewWorld [<span class="number">1</span>] [<span class="number">1</span>], <span class="number">64</span>, <span class="number">0</span>)  ' 获取矩阵</span><br><span class="line">自瞄最大距离 ＝ <span class="number">9999999999999</span></span><br><span class="line">视角宽 ＝ 窗口宽度 ÷ <span class="number">2</span></span><br><span class="line">视角高 ＝ 窗口高度 ÷ <span class="number">2</span></span><br><span class="line">自己地址 ＝ 读内存整数型 (PID, 人物基址)</span><br><span class="line">自己坐标.X ＝ 读内存小数型 (PID, 自己地址 ＋ 进制_十六到十 (<span class="string">"280"</span>))</span><br><span class="line">自己坐标.Y ＝ 读内存小数型 (PID, 自己地址 ＋ 进制_十六到十 (<span class="string">"284"</span>))</span><br><span class="line">自己坐标.Z ＝ 读内存小数型 (PID, 自己地址 ＋ 进制_十六到十 (<span class="string">"288"</span>))</span><br><span class="line">.计次循环首 (<span class="number">19</span>, i)</span><br><span class="line">    对象地址 ＝ 读内存整数型 (PID, 人物基址 ＋ i × 进制_十六到十 (<span class="string">"10"</span>))</span><br><span class="line">    对象血量 ＝ 读内存整数型 (PID, 对象地址 ＋ 进制_十六到十 (<span class="string">"E4"</span>))</span><br><span class="line">    .如果真 (对象血量 ≤ <span class="number">1</span>)</span><br><span class="line">        到循环尾 ()</span><br><span class="line">    .如果真结束</span><br><span class="line">    对象坐标.X ＝ 读内存小数型 (PID, 对象地址 ＋ 进制_十六到十 (<span class="string">"280"</span>))</span><br><span class="line">    对象坐标.Y ＝ 读内存小数型 (PID, 对象地址 ＋ 进制_十六到十 (<span class="string">"284"</span>))</span><br><span class="line">    对象坐标.Z ＝ 读内存小数型 (PID, 对象地址 ＋ 进制_十六到十 (<span class="string">"288"</span>))</span><br><span class="line"></span><br><span class="line">    相机Z ＝ ViewWorld [<span class="number">3</span>] [<span class="number">1</span>] × 对象坐标.X ＋ ViewWorld [<span class="number">3</span>] [<span class="number">2</span>] × 对象坐标.Y ＋ ViewWorld [<span class="number">3</span>] [<span class="number">3</span>] × 对象坐标.Z ＋ ViewWorld [<span class="number">3</span>] [<span class="number">4</span>]</span><br><span class="line">    .如果真 (相机Z ＜ <span class="number">0</span>)</span><br><span class="line">        到循环尾 ()</span><br><span class="line">    .如果真结束</span><br><span class="line">    缩放比例 ＝ <span class="number">1</span> ÷ 相机Z</span><br><span class="line">    相机X ＝ 视角宽 ＋ (ViewWorld [<span class="number">1</span>] [<span class="number">1</span>] × 对象坐标.X ＋ ViewWorld [<span class="number">1</span>] [<span class="number">2</span>] × 对象坐标.Y ＋ ViewWorld [<span class="number">1</span>] [<span class="number">3</span>] × 对象坐标.Z ＋ ViewWorld [<span class="number">1</span>] [<span class="number">4</span>]) × 缩放比例 × 视角宽</span><br><span class="line">    相机Y ＝ 视角高 － (ViewWorld [<span class="number">2</span>] [<span class="number">1</span>] × 对象坐标.X ＋ ViewWorld [<span class="number">2</span>] [<span class="number">2</span>] × 对象坐标.Y ＋ ViewWorld [<span class="number">2</span>] [<span class="number">3</span>] × (对象坐标.Z ＋ <span class="number">75</span>) ＋ ViewWorld [<span class="number">2</span>] [<span class="number">4</span>]) × 缩放比例 × 视角高</span><br><span class="line">    相机Y2 ＝ 视角高 － (ViewWorld [<span class="number">2</span>] [<span class="number">1</span>] × 对象坐标.X ＋ ViewWorld [<span class="number">2</span>] [<span class="number">2</span>] × 对象坐标.Y ＋ ViewWorld [<span class="number">2</span>] [<span class="number">3</span>] × (对象坐标.Z － <span class="number">5</span>) ＋ ViewWorld [<span class="number">2</span>] [<span class="number">4</span>]) × 缩放比例 × 视角高</span><br><span class="line"></span><br><span class="line">    绘制矩形 (相机X － (相机Y2 － 相机Y) ÷ <span class="number">4</span>, 相机Y, (相机Y2 － 相机Y) ÷ <span class="number">2</span>, 相机Y2 － 相机Y, #白色, <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">    骨骼头地址 ＝ 读内存整数型 (PID, 读内存整数型 (PID, 读内存整数型 (PID, 骨骼基址) ＋ (<span class="number">4</span> ＋ (i － <span class="number">1</span>) × <span class="number">2</span>) × <span class="number">8</span> ＋ <span class="number">4</span>) ＋ 进制_十六到十 (<span class="string">"578"</span>)) ＋ 进制_十六到十 (<span class="string">"C"</span>)</span><br><span class="line"></span><br><span class="line">    绘制骨骼直线 (ViewWorld, 骨骼头地址, <span class="number">3</span>, <span class="number">2</span>)</span><br><span class="line">    绘制骨骼直线 (ViewWorld, 骨骼头地址, <span class="number">2</span>, <span class="number">0</span>)  ' 左腿</span><br><span class="line"></span><br><span class="line">    绘制骨骼直线 (ViewWorld, 骨骼头地址, <span class="number">7</span>, <span class="number">6</span>)</span><br><span class="line">    绘制骨骼直线 (ViewWorld, 骨骼头地址, <span class="number">6</span>, <span class="number">0</span>)  ' 右腿</span><br><span class="line"></span><br><span class="line">    绘制骨骼直线 (ViewWorld, 骨骼头地址, <span class="number">16</span>, <span class="number">17</span>)</span><br><span class="line">    绘制骨骼直线 (ViewWorld, 骨骼头地址, <span class="number">17</span>, <span class="number">18</span>)  ' 左胳膊</span><br><span class="line"></span><br><span class="line">    绘制骨骼直线 (ViewWorld, 骨骼头地址, <span class="number">16</span>, <span class="number">29</span>)</span><br><span class="line">    绘制骨骼直线 (ViewWorld, 骨骼头地址, <span class="number">0</span>, <span class="number">15</span>)  ' 胸和脊柱</span><br><span class="line"></span><br><span class="line">    绘制骨骼直线 (ViewWorld, 骨骼头地址, <span class="number">29</span>, <span class="number">30</span>)</span><br><span class="line">    绘制骨骼直线 (ViewWorld, 骨骼头地址, <span class="number">30</span>, <span class="number">31</span>)  ' 右胳膊</span><br><span class="line"></span><br><span class="line">    绘制骨骼圆形 (ViewWorld, 骨骼头地址, <span class="number">14</span>)</span><br><span class="line"></span><br><span class="line">    自瞄部位骨骼地址 ＝ 骨骼头地址 ＋ <span class="number">14</span> × 进制_十六到十 (<span class="string">"30"</span>)</span><br><span class="line"></span><br><span class="line">    自瞄部位坐标.X ＝ 读内存小数型 (PID, 自瞄部位骨骼地址)</span><br><span class="line">    自瞄部位坐标.Y ＝ 读内存小数型 (PID, 自瞄部位骨骼地址 ＋ 进制_十六到十 (<span class="string">"10"</span>))</span><br><span class="line">    自瞄部位坐标.Z ＝ 读内存小数型 (PID, 自瞄部位骨骼地址 ＋ 进制_十六到十 (<span class="string">"20"</span>))</span><br><span class="line"></span><br><span class="line">    相机Z ＝ ViewWorld [<span class="number">3</span>] [<span class="number">1</span>] × 自瞄部位坐标.X ＋ ViewWorld [<span class="number">3</span>] [<span class="number">2</span>] × 自瞄部位坐标.Y ＋ ViewWorld [<span class="number">3</span>] [<span class="number">3</span>] × 自瞄部位坐标.Z ＋ ViewWorld [<span class="number">3</span>] [<span class="number">4</span>]</span><br><span class="line">    .如果真 (相机Z ＜ <span class="number">0</span>)</span><br><span class="line">        到循环尾 ()</span><br><span class="line">    .如果真结束</span><br><span class="line">    缩放比例 ＝ <span class="number">1</span> ÷ 相机Z</span><br><span class="line">    二维自瞄坐标.X ＝ 视角宽 ＋ (ViewWorld [<span class="number">1</span>] [<span class="number">1</span>] × 自瞄部位坐标.X ＋ ViewWorld [<span class="number">1</span>] [<span class="number">2</span>] × 自瞄部位坐标.Y ＋ ViewWorld [<span class="number">1</span>] [<span class="number">3</span>] × 自瞄部位坐标.Z ＋ ViewWorld [<span class="number">1</span>] [<span class="number">4</span>]) × 缩放比例 × 视角宽</span><br><span class="line">    二维自瞄坐标.Y ＝ 视角高 － (ViewWorld [<span class="number">2</span>] [<span class="number">1</span>] × 自瞄部位坐标.X ＋ ViewWorld [<span class="number">2</span>] [<span class="number">2</span>] × 自瞄部位坐标.Y ＋ ViewWorld [<span class="number">2</span>] [<span class="number">3</span>] × 自瞄部位坐标.Z ＋ ViewWorld [<span class="number">2</span>] [<span class="number">4</span>]) × 缩放比例 × 视角高</span><br><span class="line">    准星自瞄距离 ＝ 求平方根 ((视角宽 － 二维自瞄坐标.X) × (视角宽 － 二维自瞄坐标.X) ＋ (视角高 － 二维自瞄坐标.Y) × (视角高 － 二维自瞄坐标.Y))</span><br><span class="line">    .如果真 (准星自瞄距离 ≤ <span class="number">100</span>)</span><br><span class="line">        .如果真 (自瞄最大距离 ＞ 准星自瞄距离)</span><br><span class="line">            自瞄最大距离 ＝ 准星自瞄距离</span><br><span class="line">            最近自瞄对象骨骼点地址 ＝ 自瞄部位骨骼地址</span><br><span class="line">        .如果真结束</span><br><span class="line"></span><br><span class="line">    .如果真结束</span><br><span class="line"></span><br><span class="line">.计次循环尾 ()</span><br><span class="line"></span><br><span class="line">.如果真 (热键检测 (#左键_) ≠ <span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">    自瞄部位坐标.X ＝ 读内存小数型 (PID, 最近自瞄对象骨骼点地址)</span><br><span class="line">    自瞄部位坐标.Y ＝ 读内存小数型 (PID, 最近自瞄对象骨骼点地址 ＋ 进制_十六到十 (<span class="string">"10"</span>))</span><br><span class="line">    自瞄部位坐标.Z ＝ 读内存小数型 (PID, 最近自瞄对象骨骼点地址 ＋ 进制_十六到十 (<span class="string">"20"</span>))</span><br><span class="line">    .如果真 (自瞄部位坐标.X ≠ <span class="number">-1</span> 且 自瞄部位坐标.Y ≠ <span class="number">-1</span> 且 自瞄部位坐标.Z ≠ <span class="number">-1</span>)</span><br><span class="line">        自瞄鼠标 ＝ 骨骼自瞄算法 (自己坐标, 自瞄部位坐标)</span><br><span class="line">        写内存小数型 (PID, 鼠标基址X, 自瞄鼠标.Y)</span><br><span class="line">        写内存小数型 (PID, 鼠标基址Y, 自瞄鼠标.X)</span><br><span class="line">    .如果真结束</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">.如果真结束</span><br><span class="line">绘制圆形 (视角宽, 视角高, <span class="number">100</span>, <span class="number">60</span>, <span class="number">1</span>, #白色)</span><br><span class="line"></span><br><span class="line">.子程序 骨骼自瞄算法, D2D坐标</span><br><span class="line">.参数 个人坐标, D3D坐标</span><br><span class="line">.参数 对象坐标, D3D坐标</span><br><span class="line">.局部变量 自瞄X, 小数型</span><br><span class="line">.局部变量 自瞄Y, 小数型</span><br><span class="line">.局部变量 自瞄Z, 小数型</span><br><span class="line">.局部变量 鼠标, D2D坐标</span><br><span class="line"></span><br><span class="line">自瞄X ＝ 个人坐标.X － 对象坐标.X</span><br><span class="line">自瞄Y ＝ 个人坐标.Y － 对象坐标.Y</span><br><span class="line">.如果 (热键检测 (#Ctrl键) ≠ <span class="number">0</span>)</span><br><span class="line">    自瞄Z ＝ 个人坐标.Z － 对象坐标.Z ＋ <span class="number">45</span></span><br><span class="line">.否则</span><br><span class="line">    自瞄Z ＝ 个人坐标.Z － 对象坐标.Z ＋ <span class="number">63</span></span><br><span class="line">.如果结束</span><br><span class="line"></span><br><span class="line">.如果真 (自瞄X ≥ <span class="number">0</span> 且 自瞄Y ≥ <span class="number">0</span>)</span><br><span class="line">    鼠标.X ＝ 求反正切 (自瞄Y ÷ 自瞄X) ÷ #pi × <span class="number">180</span> － <span class="number">180</span></span><br><span class="line">.如果真结束</span><br><span class="line">.如果真 (自瞄X ≤ <span class="number">0</span> 且 自瞄Y ≥ <span class="number">0</span>)</span><br><span class="line">    鼠标.X ＝ 求反正切 (自瞄Y ÷ 自瞄X) ÷ #pi × <span class="number">180</span></span><br><span class="line">.如果真结束</span><br><span class="line">.如果真 (自瞄X ≤ <span class="number">0</span> 且 自瞄Y ≤ <span class="number">0</span>)</span><br><span class="line">    鼠标.X ＝ 求反正切 (自瞄Y ÷ 自瞄X) ÷ #pi × <span class="number">180</span></span><br><span class="line">.如果真结束</span><br><span class="line">.如果真 (自瞄X ≥ <span class="number">0</span> 且 自瞄Y ≤ <span class="number">0</span>)</span><br><span class="line">    鼠标.X ＝ 求反正切 (自瞄Y ÷ 自瞄X) ÷ #pi × <span class="number">180</span> ＋ <span class="number">180</span></span><br><span class="line">.如果真结束</span><br><span class="line">鼠标.Y ＝ 求反正切 (自瞄Z ÷ 求平方根 (自瞄X × 自瞄X ＋ 自瞄Y × 自瞄Y)) ÷ #pi × <span class="number">180</span></span><br><span class="line">返回 (鼠标)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">.子程序 绘制骨骼直线</span><br><span class="line">.参数 ViewWorld, 小数型, 数组</span><br><span class="line">.参数 骨骼头地址, 整数型</span><br><span class="line">.参数 开始点, 整数型</span><br><span class="line">.参数 结束点, 整数型</span><br><span class="line">.局部变量 骨骼坐标, D3D坐标</span><br><span class="line">.局部变量 开始X, 小数型</span><br><span class="line">.局部变量 开始Y, 小数型</span><br><span class="line">.局部变量 结束X, 小数型</span><br><span class="line">.局部变量 结束Y, 小数型</span><br><span class="line">.局部变量 相机Z, 小数型</span><br><span class="line">.局部变量 缩放比例, 小数型</span><br><span class="line">.局部变量 开始骨骼地址, 整数型</span><br><span class="line">.局部变量 结束骨骼地址, 整数型</span><br><span class="line"></span><br><span class="line">开始骨骼地址 ＝ 骨骼头地址 ＋ 开始点 × 进制_十六到十 (<span class="string">"30"</span>)</span><br><span class="line">骨骼坐标.X ＝ 读内存小数型 (PID, 开始骨骼地址)</span><br><span class="line">骨骼坐标.Y ＝ 读内存小数型 (PID, 开始骨骼地址 ＋ 进制_十六到十 (<span class="string">"10"</span>))</span><br><span class="line">骨骼坐标.Z ＝ 读内存小数型 (PID, 开始骨骼地址 ＋ 进制_十六到十 (<span class="string">"20"</span>))</span><br><span class="line">相机Z ＝ ViewWorld [<span class="number">3</span>] [<span class="number">1</span>] × 骨骼坐标.X ＋ ViewWorld [<span class="number">3</span>] [<span class="number">2</span>] × 骨骼坐标.Y ＋ ViewWorld [<span class="number">3</span>] [<span class="number">3</span>] × 骨骼坐标.Z ＋ ViewWorld [<span class="number">3</span>] [<span class="number">4</span>]</span><br><span class="line">缩放比例 ＝ <span class="number">1</span> ÷ 相机Z</span><br><span class="line">.如果真 (相机Z ＜ <span class="number">0</span>)</span><br><span class="line">    返回 ()</span><br><span class="line">.如果真结束</span><br><span class="line">开始X ＝ 视角宽 ＋ (ViewWorld [<span class="number">1</span>] [<span class="number">1</span>] × 骨骼坐标.X ＋ ViewWorld [<span class="number">1</span>] [<span class="number">2</span>] × 骨骼坐标.Y ＋ ViewWorld [<span class="number">1</span>] [<span class="number">3</span>] × 骨骼坐标.Z ＋ ViewWorld [<span class="number">1</span>] [<span class="number">4</span>]) × 缩放比例 × 视角宽</span><br><span class="line">开始Y ＝ 视角高 － (ViewWorld [<span class="number">2</span>] [<span class="number">1</span>] × 骨骼坐标.X ＋ ViewWorld [<span class="number">2</span>] [<span class="number">2</span>] × 骨骼坐标.Y ＋ ViewWorld [<span class="number">2</span>] [<span class="number">3</span>] × 骨骼坐标.Z ＋ ViewWorld [<span class="number">2</span>] [<span class="number">4</span>]) × 缩放比例 × 视角高</span><br><span class="line">结束骨骼地址 ＝ 骨骼头地址 ＋ 结束点 × 进制_十六到十 (<span class="string">"30"</span>)</span><br><span class="line">骨骼坐标.X ＝ 读内存小数型 (PID, 结束骨骼地址)</span><br><span class="line">骨骼坐标.Y ＝ 读内存小数型 (PID, 结束骨骼地址 ＋ 进制_十六到十 (<span class="string">"10"</span>))</span><br><span class="line">骨骼坐标.Z ＝ 读内存小数型 (PID, 结束骨骼地址 ＋ 进制_十六到十 (<span class="string">"20"</span>))</span><br><span class="line">相机Z ＝ ViewWorld [<span class="number">3</span>] [<span class="number">1</span>] × 骨骼坐标.X ＋ ViewWorld [<span class="number">3</span>] [<span class="number">2</span>] × 骨骼坐标.Y ＋ ViewWorld [<span class="number">3</span>] [<span class="number">3</span>] × 骨骼坐标.Z ＋ ViewWorld [<span class="number">3</span>] [<span class="number">4</span>]</span><br><span class="line">缩放比例 ＝ <span class="number">1</span> ÷ 相机Z</span><br><span class="line">.如果真 (相机Z ＜ <span class="number">0</span>)</span><br><span class="line">    返回 ()</span><br><span class="line">.如果真结束</span><br><span class="line">结束X ＝ 视角宽 ＋ (ViewWorld [<span class="number">1</span>] [<span class="number">1</span>] × 骨骼坐标.X ＋ ViewWorld [<span class="number">1</span>] [<span class="number">2</span>] × 骨骼坐标.Y ＋ ViewWorld [<span class="number">1</span>] [<span class="number">3</span>] × 骨骼坐标.Z ＋ ViewWorld [<span class="number">1</span>] [<span class="number">4</span>]) × 缩放比例 × 视角宽</span><br><span class="line">结束Y ＝ 视角高 － (ViewWorld [<span class="number">2</span>] [<span class="number">1</span>] × 骨骼坐标.X ＋ ViewWorld [<span class="number">2</span>] [<span class="number">2</span>] × 骨骼坐标.Y ＋ ViewWorld [<span class="number">2</span>] [<span class="number">3</span>] × 骨骼坐标.Z ＋ ViewWorld [<span class="number">2</span>] [<span class="number">4</span>]) × 缩放比例 × 视角高</span><br><span class="line">绘制直线 (开始X, 开始Y, 结束X, 结束Y, <span class="number">2</span>, #白色)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">.子程序 绘制骨骼圆形</span><br><span class="line">.参数 ViewWorld, 小数型, 数组</span><br><span class="line">.参数 骨骼头地址, 整数型</span><br><span class="line">.参数 头部点, 整数型</span><br><span class="line">.局部变量 骨骼坐标, D3D坐标</span><br><span class="line">.局部变量 相机Z, 小数型</span><br><span class="line">.局部变量 头部X, 小数型</span><br><span class="line">.局部变量 头部Y, 小数型</span><br><span class="line">.局部变量 头部Y2, 小数型</span><br><span class="line">.局部变量 缩放比例, 小数型</span><br><span class="line"></span><br><span class="line">骨骼头地址 ＝ 骨骼头地址 ＋ 头部点 × 进制_十六到十 (<span class="string">"30"</span>)</span><br><span class="line">骨骼坐标.X ＝ 读内存小数型 (PID, 骨骼头地址)</span><br><span class="line">骨骼坐标.Y ＝ 读内存小数型 (PID, 骨骼头地址 ＋ 进制_十六到十 (<span class="string">"10"</span>))</span><br><span class="line">骨骼坐标.Z ＝ 读内存小数型 (PID, 骨骼头地址 ＋ 进制_十六到十 (<span class="string">"20"</span>))</span><br><span class="line">相机Z ＝ ViewWorld [<span class="number">3</span>] [<span class="number">1</span>] × 骨骼坐标.X ＋ ViewWorld [<span class="number">3</span>] [<span class="number">2</span>] × 骨骼坐标.Y ＋ ViewWorld [<span class="number">3</span>] [<span class="number">3</span>] × 骨骼坐标.Z ＋ ViewWorld [<span class="number">3</span>] [<span class="number">4</span>]</span><br><span class="line">缩放比例 ＝ <span class="number">1</span> ÷ 相机Z</span><br><span class="line">.如果真 (相机Z ＜ <span class="number">0</span>)</span><br><span class="line">    返回 ()</span><br><span class="line">.如果真结束</span><br><span class="line">头部X ＝ 视角宽 ＋ (ViewWorld [<span class="number">1</span>] [<span class="number">1</span>] × 骨骼坐标.X ＋ ViewWorld [<span class="number">1</span>] [<span class="number">2</span>] × 骨骼坐标.Y ＋ ViewWorld [<span class="number">1</span>] [<span class="number">3</span>] × 骨骼坐标.Z ＋ ViewWorld [<span class="number">1</span>] [<span class="number">4</span>]) × 缩放比例 × 视角宽</span><br><span class="line">头部Y ＝ 视角高 － (ViewWorld [<span class="number">2</span>] [<span class="number">1</span>] × 骨骼坐标.X ＋ ViewWorld [<span class="number">2</span>] [<span class="number">2</span>] × 骨骼坐标.Y ＋ ViewWorld [<span class="number">2</span>] [<span class="number">3</span>] × (骨骼坐标.Z ＋ <span class="number">1</span>) ＋ ViewWorld [<span class="number">2</span>] [<span class="number">4</span>]) × 缩放比例 × 视角高</span><br><span class="line">头部Y2 ＝ 视角高 － (ViewWorld [<span class="number">2</span>] [<span class="number">1</span>] × 骨骼坐标.X ＋ ViewWorld [<span class="number">2</span>] [<span class="number">2</span>] × 骨骼坐标.Y ＋ ViewWorld [<span class="number">2</span>] [<span class="number">3</span>] × (骨骼坐标.Z ＋ <span class="number">11</span>) ＋ ViewWorld [<span class="number">2</span>] [<span class="number">4</span>]) × 缩放比例 × 视角高</span><br><span class="line">绘制圆形 (头部X, 头部Y, (头部Y － 头部Y2) ÷ <span class="number">2</span>, <span class="number">60</span>, <span class="number">2</span>, #白色)</span><br></pre></td></tr></table></figure>
+<p>绘制出来是这个样子的：</p>
+<img src="/2020/05/13/简要分析一下cs起源/自瞄讲解1.png">
+<h4 id="杂项"><a href="#杂项" class="headerlink" title="杂项"></a>杂项</h4><h5 id="阵营判断"><a href="#阵营判断" class="headerlink" title="阵营判断"></a>阵营判断</h5><p>可以不断切换阵营找，阵营偏移：<code>进制_十六到十(&quot;1F4&quot;)</code></p>
+<h5 id="无后座分析"><a href="#无后座分析" class="headerlink" title="无后座分析"></a>无后座分析</h5><p>发射子弹是有计数的，不同数量产生的后座不同，所以我们可以强制每次发射都是第一发子弹</p>
+<p>除此之外，我们还可以锁人物抖动，但是效果不理想</p>
+<p>也可以通过人物是否抖动判断是否开枪， 从而判断是否锁定为第一发子弹</p>
+<p>子弹发射数量搜索方法：开枪搜增加，不开枪搜索<code>0</code>（整数型）</p>
+<p>抖动搜索方法：开枪搜变动，不开枪搜<code>0</code>（小数型）</p>
+<p>然后就可以找到偏移</p>
+<p>子弹数量偏移：<code>进制_十六到十(&quot;15D0&quot;)</code></p>
+<p>人物纵向抖动：<code>进制_十六到十(&quot;8A0&quot;)</code></p>
+<p>人物横向抖动：<code>进制_十六到十(&quot;8A4&quot;)</code></p>
+<h4 id="成品分享"><a href="#成品分享" class="headerlink" title="成品分享"></a>成品分享</h4><p>花了一段时间 写了一个成品，基址包括 <code>本人基址 矩阵基址 骨骼基址 鼠标基址</code>，都采用了特征码定位，一定要创建房间后，地图加载出来再定位基址，不然会定位不到</p>
+<p>特征码可以用CE搜索，然后加上或减去特定的数值，就得到了基址，下面的 <code>+ -</code> 多少多少都是16进制</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">本人基址：</span><br><span class="line"></span><br><span class="line">本人基址① +<span class="number">64</span>：<span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> ?? <span class="number">03</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">01</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> ?? ?? ?? ?? <span class="number">00</span> ?? ?? ?? ?? ?? <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? <span class="number">01</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> ?? ?? ?? ?? ?? ?? ?? ?? <span class="number">44</span> <span class="number">40</span> <span class="number">00</span> <span class="number">00</span> ?? ?? ?? ?? ?? ?? ?? ?? <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? <span class="number">00</span> <span class="number">00</span> ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? <span class="number">00</span> <span class="number">00</span> ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? <span class="number">00</span> <span class="number">00</span> ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? <span class="number">00</span> <span class="number">00</span> ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? <span class="number">00</span> <span class="number">00</span> ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? <span class="number">00</span> <span class="number">00</span> ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ??</span><br><span class="line"></span><br><span class="line">本人基址② +<span class="number">64</span>：<span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> ?? <span class="number">03</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">01</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> ?? ?? ?? ?? <span class="number">00</span> ?? ?? ?? ?? ?? <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? <span class="number">01</span></span><br><span class="line"></span><br><span class="line">本人基址② +<span class="number">30</span>：<span class="number">01</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> ?? ?? ?? ?? ?? ?? ?? ?? <span class="number">44</span> <span class="number">40</span> <span class="number">00</span> <span class="number">00</span></span><br><span class="line"></span><br><span class="line">矩阵基址：</span><br><span class="line"></span><br><span class="line">矩阵基址① +<span class="number">25</span>：<span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> ?? ?? ?? ?? ?? <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> ?? <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? <span class="number">3</span>F ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? <span class="number">01</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> ?? ?? ?? ?? ?? ?? ?? ?? <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? <span class="number">09</span> ?? ?? <span class="number">03</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">80</span> BF FF FF FF FF <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span></span><br><span class="line"></span><br><span class="line">矩阵基址② <span class="number">-54</span>：<span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? <span class="number">09</span> ?? ?? <span class="number">03</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">80</span> BF FF FF FF FF <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span></span><br><span class="line"></span><br><span class="line">矩阵基址③ <span class="number">-54</span>：<span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? <span class="number">09</span> ?? ?? <span class="number">03</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">80</span></span><br><span class="line"></span><br><span class="line">骨骼基址：</span><br><span class="line"></span><br><span class="line">骨骼基址①：F0 <span class="number">38</span> ?? ?? F0 <span class="number">38</span> ?? ?? E8 BA ?? ?? <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">38</span> C1</span><br><span class="line"></span><br><span class="line">鼠标基址：</span><br><span class="line"></span><br><span class="line">鼠标基址① +<span class="number">100</span>：<span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> ?? ?? ?? ?? <span class="number">01</span> <span class="number">01</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? <span class="number">02</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">1</span>C <span class="number">01</span> <span class="number">00</span> <span class="number">00</span> <span class="number">80</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">02</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">02</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> ?? ?? ?? ?? <span class="number">03</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">01</span> <span class="number">00</span> <span class="number">01</span> <span class="number">00</span> ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> ?? ?? ?? ?? ?? <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> ?? ?? ?? <span class="number">00</span> ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> ?? ?? ?? <span class="number">00</span> ?? ?? ?? <span class="number">00</span></span><br><span class="line"></span><br><span class="line">鼠标基址② +<span class="number">90</span>：<span class="number">03</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">01</span> <span class="number">00</span> <span class="number">01</span> <span class="number">00</span> ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> ?? ?? ?? ?? <span class="number">00</span></span><br><span class="line"></span><br><span class="line">鼠标基址③ +BC：<span class="number">01</span> <span class="number">01</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? <span class="number">02</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">1</span>C <span class="number">01</span> <span class="number">00</span> <span class="number">00</span> <span class="number">80</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">02</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">02</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> ?? ?? ?? ?? <span class="number">03</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">01</span> <span class="number">00</span> <span class="number">01</span> <span class="number">00</span></span><br><span class="line"></span><br><span class="line">房间人数：</span><br><span class="line"></span><br><span class="line">房间人数① +<span class="number">63</span>：<span class="number">00</span> <span class="number">00</span> <span class="number">00</span> ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? <span class="number">00</span> <span class="number">65</span> <span class="number">04</span> <span class="number">00</span> <span class="number">00</span> <span class="number">28</span> <span class="number">23</span> <span class="number">00</span> ?? ?? <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">01</span> <span class="number">00</span> <span class="number">00</span> ?? ?? ?? ?? ?? ?? ?? ?? <span class="number">00</span> <span class="number">65</span> <span class="number">04</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> C4 <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">08</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> ?? <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">20</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> ?? <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">8</span>F C2 <span class="number">75</span> <span class="number">3</span>C ?? ?? ?? ?? ?? <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> ?? <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> ?? ?? ?? ?? <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> ?? ?? ?? ?? ?? ?? ?? ?? ?? <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">01</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span></span><br><span class="line"></span><br><span class="line">房间人数② +<span class="number">63</span>：<span class="number">00</span> <span class="number">00</span> <span class="number">00</span> ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? <span class="number">00</span> <span class="number">65</span> <span class="number">04</span> <span class="number">00</span> <span class="number">00</span> <span class="number">28</span> <span class="number">23</span> <span class="number">00</span></span><br><span class="line"></span><br><span class="line">房间人数② +<span class="number">2</span>C：<span class="number">00</span> <span class="number">65</span> <span class="number">04</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> C4 <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">08</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> ?? <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">20</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span></span><br><span class="line"></span><br><span class="line">存活人数：</span><br><span class="line"></span><br><span class="line">存活人数① +<span class="number">24</span>：<span class="number">04</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> ?? ?? ?? ?? ?? ?? ?? ?? <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> ?? ?? ?? ?? ?? ?? ?? ?? <span class="number">08</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">01</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span></span><br><span class="line"></span><br><span class="line">地图判断：</span><br><span class="line"></span><br><span class="line">地图判断①：client.dll+<span class="number">4</span>EBB00</span><br><span class="line"></span><br><span class="line">地图判断②：client.dll+<span class="number">4</span>EBAF8</span><br></pre></td></tr></table></figure>
+<p>然后，这是主界面的样子，说明一下，这是最初版本：</p>
+<img src="/2020/05/13/简要分析一下cs起源/使用效果1.png">
+<img src="/2020/05/13/简要分析一下cs起源/使用效果2.png">
+<img src="/2020/05/13/简要分析一下cs起源/使用效果3.png">
+<img src="/2020/05/13/简要分析一下cs起源/使用效果4.png">
+<p><del>① 不推荐绘制骨骼，因为骨骼由于游戏的原因刷新很慢，所以会导致绘制到空气上</del></p>
+<p>② 对于不同版本的游戏，修改版什么的可能兼容可能不兼容，具体自己测试</p>
+<p>③ 某些地图会导致矩阵闪烁，就会导致方框闪烁，上下闪</p>
+<p>④ 一定要加载地图之后再开，不然定位不到基址</p>
+<p><del>⑥ CS起源人数最大好像是22，不知道可不可以修改，如果可以修改，房间人数加上自己不要超过32个</del></p>
+<p>⑦ 瞬移功能是瞬移到距离你最近的敌人头上，前提是有足够空间容纳你，如果那个敌人头上空间不够(几乎不可能)，那就会瞬移失败</p>
+<p>⑧ 可能也有其他的BUG，应该没什么影响</p>
+<p>⑨ 本程序仅支持单机，请勿联机，有可能以后会新增其他功能，敬请期待</p>
+<p>2020年8月14日更新</p>
+<p>①修复空气骨骼的问题，增加了Dormant判断</p>
+<p>②修复人数的问题，人数动态获取，多少都可以</p>
+<p>③新增人物加速，该功能是测试功能，开启后画面会有闪烁，建议速度不要超过220%，因为太快会被弹起来</p>
+<p>④新增第三人称，这个有时候会卡bug，导致你的视角移动和人物是分开的，而且在这个模式下不能切换武器，如果第三人称搭配人物加速会减弱画面的闪烁，虽然他不能实质上减少，但是视觉上看起来没那么闪了</p>
+<p>⑤新增修改视野大小的功能，即修改 <code>FOV</code> ，有时候可以有长臂的效果</p>
+<p>⑥新增地图判断，可以识别当前是哪个地图，我只对我有的地图进行了适配，部分修改版可能不支持，请自行测试</p>
+<p>⑦新增武器模型修改，可以拿地图模型或者其他模型开枪，比如说拿刀打子弹，因为每个地图的模型都是不一样的，所以我只适配了我有的地图，部分修改版地图可能不支持，请自行测试</p>
+<p>接下来，这是一段演示视频，说明一下，这是最初版本：</p>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <link href="https://cdn.jsdelivr.net/gh/Shadowairing/MyBlog_MISC/MyBlog_VideoPlayer/OnlinePlayer_0000/video-js.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/gh/Shadowairing/MyBlog_MISC/MyBlog_VideoPlayer/OnlinePlayer_0000/video.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/Shadowairing/MyBlog_MISC/MyBlog_VideoPlayer/OnlinePlayer_0000/videojs-contrib-hls.min.js" type="text/javascript"></script>
+    <!-- videojs-contrib-hls 用于在电脑端播放 如果只需手机播放可以不引入 -->
+</head>
+<body>
+    <style>
+        .video-js .vjs-tech {position: relative !important;}
+    </style>
+    <div>
+        <video id="myVideo" class="video-js vjs-default-skin vjs-big-play-centered" controls preload="auto" data-setup="{}" style="width: 100%;height: auto">
+            <source id="source" src="https://cdn.jsdelivr.net/gh/Shadowairing/MyBlog_Data_Custom_00000@master/Videos/demo/Taichi_CSSWG_Demo_000/0.m3u8" type="application/x-mpegURL">
+        </video>
+    </div>
+</body>
+
+<script>
+    // videojs 简单使用
+    var myVideo = videojs('myVideo', {
+        bigPlayButton: true,
+        textTrackDisplay: false,
+        posterImage: false,
+        errorDisplay: false,
+    })
+    myVideo.play()
+    var changeVideo = function (vdoSrc) {
+        if (/\.m3u8$/.test(vdoSrc)) { //判断视频源是否是m3u8的格式
+            myVideo.src({
+                src: vdoSrc,
+                type: 'application/x-mpegURL' //在重新添加视频源的时候需要给新的type的值
+            })
+        } else {
+            myVideo.src(vdoSrc)
+        }
+        myVideo.load();
+        myVideo.play();
+    }
+    })
+</script>
+</html>
+
+<p>这是下载链接：<a href="https://cdn.jsdelivr.net/gh/Shadowairing/MyBlog_Data_Custom_00000@master/MISC/CS_Source_Full_Function/CS_Source_Full_Function_1_0_1.rar" target="_blank" rel="noopener">CS起源全功能</a></p>
+<p>解压密码: 123</p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Infinity
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://www.sstkayr.com/2020/05/13/简要分析一下cs起源/" title="简要分析一下cs起源">https://www.sstkayr.com/2020/05/13/简要分析一下cs起源/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+	  <div>
+		
+		<div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">------ 结界 ------</div>
+    
+</div>
+		
+	  </div>
+	  
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/易语言/" rel="tag"><i class="fa fa-tag"></i> 易语言</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/05/07/如何找基址，原理是什么/" rel="prev" title="如何找基址，原理是什么">
+      <i class="fa fa-chevron-left"></i> 如何找基址，原理是什么
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/08/09/写了一个变速精灵/" rel="next" title="写了一个变速精灵">
+      写了一个变速精灵 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#基址篇"><span class="nav-number">1.</span> <span class="nav-text">基址篇</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#关于找自己的基址，我推荐两种方法"><span class="nav-number">1.1.</span> <span class="nav-text">关于找自己的基址，我推荐两种方法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#解释一下基址："><span class="nav-number">1.2.</span> <span class="nav-text">解释一下基址：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#然后，开始找自己的血量偏移，人物坐标偏移"><span class="nav-number">1.3.</span> <span class="nav-text">然后，开始找自己的血量偏移，人物坐标偏移</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#找对象的基址"><span class="nav-number">1.4.</span> <span class="nav-text">找对象的基址</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#矩阵篇"><span class="nav-number">2.</span> <span class="nav-text">矩阵篇</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#寻找矩阵基址"><span class="nav-number">2.1.</span> <span class="nav-text">寻找矩阵基址</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#矩阵参数讲解"><span class="nav-number">2.2.</span> <span class="nav-text">矩阵参数讲解</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#使用矩阵"><span class="nav-number">2.3.</span> <span class="nav-text">使用矩阵</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#骨骼分析篇"><span class="nav-number">3.</span> <span class="nav-text">骨骼分析篇</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#找骨骼基址"><span class="nav-number">3.1.</span> <span class="nav-text">找骨骼基址</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#绘制骨骼"><span class="nav-number">3.2.</span> <span class="nav-text">绘制骨骼</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#自瞄篇"><span class="nav-number">4.</span> <span class="nav-text">自瞄篇</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#找鼠标基址"><span class="nav-number">4.1.</span> <span class="nav-text">找鼠标基址</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#杂项"><span class="nav-number">5.</span> <span class="nav-text">杂项</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#阵营判断"><span class="nav-number">5.1.</span> <span class="nav-text">阵营判断</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#无后座分析"><span class="nav-number">5.2.</span> <span class="nav-text">无后座分析</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#成品分享"><span class="nav-number">6.</span> <span class="nav-text">成品分享</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  
+   <a href="/">
+    <img class="site-author-image" itemprop="image" alt="Infinity"
+      src="/images/avatar.png">
+   </a>
+  <p class="site-author-name" itemprop="name">Infinity</p>
+  <div class="site-description" itemprop="description">Stars are only visible in darkness.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">36</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">太极</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">126k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">1:55</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script size="300" alpha="0.6" zIndex="-1" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/pisces.js"></script>
+<script src="/js/next-boot.js"></script>
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.getAttribute('pjax') !== null) {
+      script.setAttribute('pjax', '');
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+  
+<!-- calendar widget -->
+
+    <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-calendar/calendar.min.js"></script>
+    <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-calendar/languages.min.js"></script>
+    <script type="text/javascript">
+    $(function() {
+        $('#CloudCalendar').aCalendar('zh-CN',
+            $.extend(
+                '', {
+                    single:true,
+                    root:'/calendar/'
+                }
+            )
+        );
+    });
+    </script>
+
+
+    </div>
+  <script src="https://cdn.jsdelivr.net/gh/Shadowairing/MyBlog_MISC/Live2d-Widget_Custom/Live2d-Widget_Custom_0000/autoload.js"></script>
+</body>
+</html>
